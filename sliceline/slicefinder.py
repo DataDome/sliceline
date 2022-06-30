@@ -70,7 +70,7 @@ class Slicefinder(BaseEstimator, TransformerMixin):
 
     References
     ----------
-    `SliceLine: Fast, Linear-Algebra-based Slice Finding for ML Model Debugging <https://mboehm7.github.io/resources/sigmod2021b_sliceline.pdf>`,
+    [SliceLine: Fast, Linear-Algebra-based Slice Finding for ML Model Debugging](https://mboehm7.github.io/resources/sigmod2021b_sliceline.pdf)`,
     from *Svetlana Sagadeeva* and *Matthias Boehm* of Graz University of Technology.
     """
 
