@@ -27,7 +27,11 @@ You can use sliceline as follows:
 >>> X_trans = slice_finder.transform(X)
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 .. autoclass:: slicefinder.Slicefinder
 =======
 .. autoclass:: ..sliceline.slicefinder.Slicefinder
 >>>>>>> 611d9c6 (Fix path in usage.rst)
+=======
+.. autoclass:: .sliceline.slicefinder.Slicefinder
+>>>>>>> 7361cf4 (Refix slicefinder path)
