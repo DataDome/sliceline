@@ -28,9 +28,9 @@ class Slicefinder(BaseEstimator, TransformerMixin):
     of this subspace is controlled by `max_l`.
 
     The slice scoring function is the linear combination of two objectives:
-        - find sufficiently large slices, with more than `min_sup` elements
+        - Find sufficiently large slices, with more than `min_sup` elements
           (high impact on the overall model)
-        - with substantial errors
+        - With substantial errors
           (high negative impact on sub-group/model)
     The importance of each objective is controlled through a single parameter `alpha`.
 
@@ -70,9 +70,8 @@ class Slicefinder(BaseEstimator, TransformerMixin):
 
     References
     ----------
-    `"SliceLine: Fast, Linear-Algebra-based Slice Finding for ML Model Debugging",
-    from Svetlana Sagadeeva and Matthias Boehm of Graz University of Technology.
-    <https://mboehm7.github.io/resources/sigmod2021b_sliceline.pdf>`
+    `SliceLine: Fast, Linear-Algebra-based Slice Finding for ML Model Debugging <https://mboehm7.github.io/resources/sigmod2021b_sliceline.pdf>`__,
+    from *Svetlana Sagadeeva* and *Matthias Boehm* of Graz University of Technology.
     """
 
     def __init__(
