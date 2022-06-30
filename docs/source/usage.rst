@@ -26,4 +26,4 @@ You can use sliceline as follows:
 >>> print(slice_finder.top_slices_)
 >>> X_trans = slice_finder.transform(X)
 
-.. autoclass:: sliceline.slicefinder.Slicefinder
+.. autoclass:: slicefinder.Slicefinder
