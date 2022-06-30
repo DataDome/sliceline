@@ -27,10 +27,10 @@ class Slicefinder(BaseEstimator, TransformerMixin):
     A slice is a subspace of `X` defined by one or more predicates. The maximal dimension
     of this subspace is controlled by `max_l`.
 
-    The slice scoring function is the linear combination of two objectives:
-        - find sufficiently large slices, with more than `min_sup` elements
+    The slice scoring function is the linear combination of two objectives.
+        - Find sufficiently large slices, with more than `min_sup` elements
           (high impact on the overall model)
-        - with substantial errors
+        - With substantial errors
           (high negative impact on sub-group/model)
     The importance of each objective is controlled through a single parameter `alpha`.
 
