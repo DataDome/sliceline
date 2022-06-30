@@ -20,7 +20,7 @@ SliceLine finds the top slices in ``X`` that identify where a ML model performs 
 
 You can use sliceline as follows:
 
->>> from sliceline.slicefinder import Slicefinder
+>>> from sliceline import Slicefinder
 >>> slice_finder = Slicefinder()
 >>> slice_finder.fit(X, errors)
 >>> print(slice_finder.top_slices_)

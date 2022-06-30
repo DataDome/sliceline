@@ -6,7 +6,7 @@ Welcome to Sliceline's documentation!
 It is an implementation of `SliceLine: Fast, Linear-Algebra-based Slice Finding for ML Model Debugging <https://mboehm7.github.io/resources/sigmod2021b_sliceline.pdf>`_,
 from *Svetlana Sagadeeva* and *Matthias Boehm* of Graz University of Technology.
 
-Check out the {doc}`usage`_ section for further information, including how to {ref}`installation`_ the project.
+Check out the usage section for further information, including how to installation the project.
 
 
 Contents
