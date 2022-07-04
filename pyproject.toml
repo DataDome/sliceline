@@ -2,7 +2,7 @@
 requires = ["poetry_core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
-[tool.poetry]
+[project]
 name = "sliceline"
 version = "0.0.0"
 description = "✂️ Fast slice finding for Machine Learning model debugging."
