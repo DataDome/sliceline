@@ -7,7 +7,7 @@ name = "sliceline"
 version = "0.0.0"
 description = "✂️ Fast slice finding for Machine Learning model debugging."
 authors = ["Antoine de Daran"]
-readme = "README.md"
+readme = "README.rst"
 repository = "https://github.com/DataDome/sliceline"
 documentation = "https://sliceline.readthedocs.io/en/stable/"
 
