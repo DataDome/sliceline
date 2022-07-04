@@ -11,9 +11,6 @@ project = 'Sliceline'
 copyright = '2022, DataDome'
 author = 'Antoine de Daran'
 
-release = '0.1'
-version = '0.1.0'
-
 # -- General configuration
 
 extensions = [
