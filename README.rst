@@ -11,7 +11,7 @@ from Svetlana Sagadeeva and Matthias Boehm of Graz University of
 Technology.
 
 👉 Getting started
------------------
+------------------
 
 Given an input dataset ``X`` and a model error vector ``errors``,
 SliceLine finds the top slices in ``X`` that identify where a ML model
@@ -39,7 +39,7 @@ for a more thorough tutorial:
 2. Binning template to apply Sliceline
 
 🛠 Installation
---------------
+---------------
 
 Sliceline is intended to work with **Python 3.9 or above**. Installation
 can be done with ``pip``:
@@ -66,7 +66,7 @@ Or, through SSH:
    pip install git+ssh://git@github.com/datadome/sliceline.git --upgrade
 
 🔗 Useful links
---------------
+---------------
 
 -  `Documentation <https://sliceline.com>`__
 -  `Package releases <https://pypi.org/project/sliceline/#history>`__
@@ -74,7 +74,7 @@ Or, through SSH:
    paper <https://mboehm7.github.io/resources/sigmod2021b_sliceline.pdf>`__
 
 👐 Contributing
---------------
+---------------
 
 Feel free to contribute in any way you like, we’re always open to new
 ideas and approaches.
