@@ -92,10 +92,3 @@ ideas and approaches.
 Please check out the `contribution
 guidelines <https://github.com/datadome/sliceline/blob/main/CONTRIBUTING.md>`__
 if you want to bring modifications to the code base.
-
-📝 License
----------
-
-Sliceline is free and open-source software licensed under the `3-clause
-BSD
-license <https://github.com/datadome/sliceline/blob/main/LICENSE>`__.
