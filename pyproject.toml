@@ -8,9 +8,8 @@ version = "0.0.0"
 description = "✂️ Fast slice finding for Machine Learning model debugging."
 authors = ["Antoine de Daran"]
 readme = "README.md"
-license = "BSD-3-Clause"
 repository = "https://github.com/DataDome/sliceline"
-documentation = "https://sliceline.readthedocs.io/en/latest/index.html"
+documentation = "https://sliceline.readthedocs.io/en/stable/"
 
 [tool.poetry.dependencies]
 python = "~3.9"
