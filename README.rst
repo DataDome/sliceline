@@ -32,7 +32,7 @@ You can use sliceline as follows:
    X_trans = slice_finder.transform(X)
 
 We invite you to check the `demo
-notebooks <https://github.com/datadome/sliceline/blob/main/notebooks>`__
+notebooks <https://github.com/DataDome/sliceline/blob/main/notebooks>`__
 for a more thorough tutorial:
 
 1. Implementing Sliceline on Titanic dataset
@@ -57,7 +57,7 @@ You can install the latest development version from GitHub as so:
 
 .. code:: sh
 
-   pip install git+https://github.com/datadome/sliceline --upgrade
+   pip install git+https://github.com/DataDome/sliceline --upgrade
 
 Or, through SSH:
 
@@ -70,8 +70,7 @@ Or, through SSH:
 
 -  `Documentation <https://sliceline.com>`__
 -  `Package releases <https://pypi.org/project/sliceline/#history>`__
--  `SliceLine
-   paper <https://mboehm7.github.io/resources/sigmod2021b_sliceline.pdf>`__
+-  `SliceLine paper <https://mboehm7.github.io/resources/sigmod2021b_sliceline.pdf>`__
 
 👐 Contributing
 ---------------
@@ -80,15 +79,20 @@ Feel free to contribute in any way you like, we’re always open to new
 ideas and approaches.
 
 -  `Open a
-   discussion <https://github.com/datadome/sliceline/discussions/new>`__
+   discussion <https://github.com/DataDome/sliceline/discussions/new>`__
    if you have any question or enquiry whatsoever. It’s more useful to
    ask your question in public rather than sending us a private email.
    It’s also encouraged to open a discussion before contributing, so
    that everyone is aligned and unnecessary work is avoided.
 -  Feel welcome to `open an
-   issue <https://github.com/datadome/sliceline/issues/new/choose>`__ if
+   issue <https://github.com/DataDome/sliceline/issues/new/choose>`__ if
    you think you’ve spotted a bug or a performance issue.
 
 Please check out the `contribution
-guidelines <https://github.com/datadome/sliceline/blob/main/CONTRIBUTING.md>`__
+guidelines <https://github.com/DataDome/sliceline/blob/main/CONTRIBUTING.md>`__
 if you want to bring modifications to the code base.
+
+📝 License
+---------
+
+Sliceline is free and open-source software licensed under the `3-clause BSD license <https://github.com/DataDome/sliceline/blob/main/LICENSE>`__.
