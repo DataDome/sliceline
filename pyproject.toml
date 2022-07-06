@@ -8,6 +8,7 @@ version = "0.0.0" # This version is a generic placeholder. It should not be chan
 description = "✂️ Fast slice finding for Machine Learning model debugging."
 authors = ["Antoine de Daran"]
 readme = "README.rst"
+license = "BSD-3-Clause"
 repository = "https://github.com/DataDome/sliceline"
 documentation = "https://sliceline.readthedocs.io/en/stable/"
 
