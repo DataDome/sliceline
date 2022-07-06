@@ -68,7 +68,7 @@ Or, through SSH:
 🔗 Useful links
 ---------------
 
--  `Documentation <https://sliceline.com>`__
+-  `Documentation <https://sliceline.readthedocs.io/en/stable/>`__
 -  `Package releases <https://pypi.org/project/sliceline/#history>`__
 -  `SliceLine paper <https://mboehm7.github.io/resources/sigmod2021b_sliceline.pdf>`__
 
