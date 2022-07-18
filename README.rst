@@ -31,13 +31,6 @@ You can use sliceline as follows:
 
    X_trans = slice_finder.transform(X)
 
-We invite you to check the `demo
-notebooks <https://github.com/DataDome/sliceline/blob/main/notebooks>`__
-for a more thorough tutorial:
-
-1. Implementing Sliceline on Titanic dataset
-2. Binning template to apply Sliceline
-
 🛠 Installation
 ---------------
 
