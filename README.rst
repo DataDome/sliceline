@@ -31,10 +31,17 @@ You can use sliceline as follows:
 
    X_trans = slice_finder.transform(X)
 
+We invite you to check the `demo
+notebooks <https://github.com/DataDome/sliceline/blob/main/notebooks>`__
+for a more thorough tutorial:
+
+1. Implementing Sliceline on Titanic dataset
+2. Implementing Sliceline on California housing dataset
+
 🛠 Installation
 ---------------
 
-Sliceline is intended to work with **Python 3.9 or above**. Installation
+Sliceline is intended to work with **Python 3.7 or above**. Installation
 can be done with ``pip``:
 
 .. code:: sh
