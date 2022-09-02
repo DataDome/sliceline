@@ -62,3 +62,12 @@ These tests absolutely have to pass.
 ```sh
 $ make test
 ```
+
+**Notebook tests**
+
+You don't have to worry too much about these, as we only check them before each release.
+If you break them because you changed some code, then it's probably because the notebooks have to be modified, not the other way around.
+
+```sh
+$ make execute-notebooks
+```
