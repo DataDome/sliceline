@@ -18,3 +18,5 @@ jobs:
         run: make init
       - name: Run test
         run: make test
+      - name: Run notebooks
+        run: make execute-notebooks

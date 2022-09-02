@@ -8,3 +8,9 @@ test:
 
 doc:
 	sphinx-build -a docs/source docs/build
+
+notebook:
+	poetry run jupyter notebook
+
+execute-notebooks:
+	jupyter nbconvert --execute --to notebook --inplace notebooks/*.ipynb --ExecutePreprocessor.timeout=-1
