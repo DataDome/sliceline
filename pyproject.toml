@@ -20,6 +20,8 @@ scikit-learn = "^1.0.1"
 [tool.poetry.dev-dependencies]
 black = "^22.3.0"
 flake8 = "^3.0.0"
+jupyter = "^1.0.0"
+nbconvert = "^6.5.0"
 pandas = "^1.1.0"
 pytest = "^6.2.5"
 pytest-benchmark = "^3.4.1"
