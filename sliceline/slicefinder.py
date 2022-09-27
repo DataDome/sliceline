@@ -472,8 +472,6 @@ class Slicefinder(BaseEstimator, TransformerMixin):
         feature_offset_end: np.ndarray,
     ) -> sp.csr_matrix:
         """Compute and prune plausible slices candidates."""
-        slices, statistics = self._get_pruned_s_r(slices, statistics)
-
         compatible_slices = self._join_compatible_slices(slices, level)
 
         if np.sum(compatible_slices) == 0:
@@ -587,6 +585,7 @@ class Slicefinder(BaseEstimator, TransformerMixin):
             level += 1
 
             # enumerate candidate join pairs, including size/error pruning
+            slices, statistics = self._get_pruned_s_r(slices, statistics)
             nr_s = slices.shape[0]
             slices = self._get_pair_candidates(
                 slices,
