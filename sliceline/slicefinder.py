@@ -140,7 +140,7 @@ class Slicefinder(BaseEstimator, TransformerMixin):
         self._check_params()
 
         # Check that X and e have correct shape
-        X_array, errors = check_X_e(X, errors)
+        X_array, errors = check_X_e(X, errors, y_numeric=True)
 
         self._check_feature_names(X, reset=True)
 

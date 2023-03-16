@@ -111,7 +111,7 @@ def basic_test_data():
 @pytest.fixture
 def experiments():
     """Implement several end-to-end examples with the expected outputs regarding the inputs."""
-    # Experiment 1: basic case
+    # Experiment 1: basic case with boolean errors
     np.random.seed(1)
     n_small = 10
     X_1 = np.array(
@@ -121,7 +121,7 @@ def experiments():
             np.random.randint(1, 4, size=2 * n_small),
         ]
     ).T
-    errors_1 = np.array([1] * n_small + [0] * n_small)
+    errors_1 = np.array([True] * n_small + [False] * n_small)
     expected_top_slices_1 = np.array([[1, 1, None], [None, 1, 2], [1, None, 2]])
     experiment_1 = Experiment(X_1, errors_1, expected_top_slices_1)
 
