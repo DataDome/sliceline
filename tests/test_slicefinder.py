@@ -303,6 +303,7 @@ def test_search_slices(benchmark, basic_test_data):
         "experiment_14",
         "experiment_15",
         "experiment_16",
+        "experiment_17",
     ],
 )
 def test_experiments(benchmark, experiments, experiment_name):
