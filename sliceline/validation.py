@@ -806,7 +806,7 @@ def _check_y(y, multi_output=False, y_numeric=False, estimator=None):
         _assert_all_finite(y, input_name="y", estimator_name=estimator_name)
         _ensure_no_complex_data(y)
     if y_numeric and y.dtype.kind in ("O", "b"):
-        y = y.astype(np.float64)
+        y = y.astype(np.float32)
 
     return y
 

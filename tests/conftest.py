@@ -139,7 +139,7 @@ def experiments():
     ).T
     errors_2 = np.array([1] * n_small + [0] * n_small)
     expected_top_slices_2 = np.array(
-        [[None, 1.0, None, None, 1.0, None], [None, None, 4.0, None, 1.0, None]]
+        [[None, 1, None, None, 1, None], [None, None, 4, None, 1, None]]
     )
     experiment_2 = Experiment(X_2, errors_2, expected_top_slices_2)
 
