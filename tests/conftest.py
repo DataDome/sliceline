@@ -321,6 +321,16 @@ def experiments():
         X_16, errors_16, expected_top_slices_16, alpha=0.01, max_l=3, min_sup=7
     )
 
+    # Experiment 17: Experiment 4 w/ min_sup=0.1
+    expected_top_slices_17 = np.array(
+        [
+            [1.0, 1.0, None, None, None, None],
+            [1.0, None, None, None, None, None],
+            [None, 1.0, None, None, None, None]
+        ]
+    )
+    experiment_17 = Experiment(X_4, errors_4, expected_top_slices_17, min_sup=0.5)
+
     return {
         "experiment_1": experiment_1,
         "experiment_2": experiment_2,
@@ -338,4 +348,5 @@ def experiments():
         "experiment_14": experiment_14,
         "experiment_15": experiment_15,
         "experiment_16": experiment_16,
+        "experiment_17": experiment_17
     }

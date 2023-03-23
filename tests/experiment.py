@@ -36,9 +36,10 @@ class Experiment:
         Maximum lattice level.
         In other words: the maximum number of predicate to define a slice.
 
-    min_sup: int, default=10
+    min_sup: int or float, default=10
         Minimum support threshold.
         Inspired by frequent itemset mining, it ensures statistical significance.
+        If `min_sup` is a float (0 < `min_sup` < 1), it represents the faction of the input dataset (`X`)
 
     verbose: bool, default=True
         Controls the verbosity.

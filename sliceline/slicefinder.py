@@ -2,7 +2,7 @@
 The slicefinder module implements the Slicefinder class.
 """
 import logging
-from typing import Tuple
+from typing import Tuple, Union
 
 import numpy as np
 from scipy import sparse as sp
@@ -52,9 +52,10 @@ class Slicefinder(BaseEstimator, TransformerMixin):
         Maximum lattice level.
         In other words: the maximum number of predicate to define a slice.
 
-    min_sup: int, default=10
+    min_sup: int or float, default=10
         Minimum support threshold.
         Inspired by frequent itemset mining, it ensures statistical significance.
+        If `min_sup` is a float (0 < `min_sup` < 1), it represents the faction of the input dataset (`X`)
 
     verbose: bool, default=True
         Controls the verbosity.
@@ -79,7 +80,7 @@ class Slicefinder(BaseEstimator, TransformerMixin):
         alpha: float = 0.6,
         k: int = 1,
         max_l: int = 4,
-        min_sup: int = 10,
+        min_sup: Union[int, float] = 10,
         verbose: bool = True,
     ):
         self.alpha = alpha
@@ -107,7 +108,10 @@ class Slicefinder(BaseEstimator, TransformerMixin):
         if self.max_l <= 0:
             raise ValueError(f"Invalid 'max_l' parameter: {self.max_l}")
 
-        if self.min_sup < 0:
+        if (
+            self.min_sup < 0 or
+            (isinstance(self.min_sup, float) and self.min_sup >= 1)
+        ):
             raise ValueError(f"Invalid 'min_sup' parameter: {self.min_sup}")
 
     def _check_top_slices(self):
@@ -137,6 +141,10 @@ class Slicefinder(BaseEstimator, TransformerMixin):
             Returns the instance itself.
         """
         self._check_params()
+
+        # Update min_sup for a fraction of the input dataset size
+        if 0 < self.min_sup < 1:
+            self.min_sup = int(self.min_sup * len(X))
 
         # Check that X and e have correct shape
         X_array, errors = check_X_e(X, errors)
