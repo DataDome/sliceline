@@ -70,6 +70,15 @@ class Slicefinder(BaseEstimator, TransformerMixin):
     average_error_: float
         Mean value of the input error.
 
+    top_slices_statistics_: list of dict of length `len(top_slices_)`
+        The statistics of the slices found sorted by slice's scores.
+        For each slice, the following statistics are stored:
+            - slice_score: the score of the slice (defined in `_score` method)
+            - sum_slice_error: the sum of all the errors in the slice
+            - max_slice_error: the maximum of all errors in the slice
+            - slice_size: the number of elements in the slice
+            - slice_average_error: the average error in the slice (sum_slice_error / slice_size)
+
     References
     ----------
     `SliceLine: Fast, Linear-Algebra-based Slice Finding for ML Model Debugging
@@ -92,7 +101,8 @@ class Slicefinder(BaseEstimator, TransformerMixin):
         self.verbose = verbose
 
         self._one_hot_encoder = self._top_slices_enc = None
-        self.top_slices_ = self.average_error_ = None
+        self.top_slices_ = self.top_slices_statistics_ = None
+        self.average_error_ = None
 
         if self.verbose:
             logger.setLevel(logging.DEBUG)
