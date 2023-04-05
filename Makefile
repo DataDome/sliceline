@@ -3,8 +3,14 @@ init:
 	pip3 install poetry
 	poetry install
 
+lint:
+	poetry run black .
+	poetry run isort .
+	poetry run flake8
+
 test:
-	poetry run pytest tests --cov=sliceline --cov-report=xml:.github/reports/coverage.xml
+	poetry run coverage run -m pytest
+	poetry run coverage report -m
 
 doc:
 	sphinx-build -a docs/source docs/build

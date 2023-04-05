@@ -99,7 +99,8 @@ def _num_samples(x):
     if hasattr(x, "shape") and x.shape is not None:
         if len(x.shape) == 0:
             raise TypeError(
-                "Singleton array %r cannot be considered a valid collection." % x
+                "Singleton array %r cannot be considered a valid collection."
+                % x
             )
         # Check that shape is returning an integer or default to len
         # Dask dataframes may not return numeric shape[0] value
@@ -242,7 +243,8 @@ def _ensure_sparse_format(
     if force_all_finite:
         if not hasattr(spmatrix, "data"):
             warnings.warn(
-                "Can't check %s sparse matrix for nan or inf." % spmatrix.format,
+                "Can't check %s sparse matrix for nan or inf."
+                % spmatrix.format,
                 stacklevel=2,
             )
         else:
@@ -450,7 +452,10 @@ def check_array(
         with suppress(ImportError):
             from pandas.api.types import is_sparse
 
-            if not hasattr(array, "sparse") and array.dtypes.apply(is_sparse).any():
+            if (
+                not hasattr(array, "sparse")
+                and array.dtypes.apply(is_sparse).any()
+            ):
                 warnings.warn(
                     "pandas.DataFrame with sparse columns found."
                     "It will be converted to a dense numpy array."
@@ -781,7 +786,9 @@ def check_X_e(
         input_name="X",
     )
 
-    y = _check_y(y, multi_output=multi_output, y_numeric=y_numeric, estimator=estimator)
+    y = _check_y(
+        y, multi_output=multi_output, y_numeric=y_numeric, estimator=estimator
+    )
 
     check_consistent_length(X, y)
 
@@ -847,4 +854,6 @@ def column_or_1d(y, *, warn=False):
             )
         return np.ravel(y)
 
-    raise ValueError(f"y should be a 1d array, got an array of shape {shape} instead.")
+    raise ValueError(
+        f"y should be a 1d array, got an array of shape {shape} instead."
+    )

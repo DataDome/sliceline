@@ -13,7 +13,9 @@ def test_dummify(benchmark, basic_test_data):
     """Test _dummify method."""
     array = np.array([1, 3, 5, 6, 7, 8, 13, 15])
     computed = benchmark(
-        basic_test_data["slicefinder_model"]._dummify, array, basic_test_data["n_col_x_encoded"]
+        basic_test_data["slicefinder_model"]._dummify,
+        array,
+        basic_test_data["n_col_x_encoded"],
     )
 
     assert np.array_equal(computed.A, basic_test_data["slices"].A)
@@ -62,13 +64,97 @@ def test_maintain_top_k(benchmark, basic_test_data):
 def test_score_ub(benchmark, basic_test_data):
     """Test _score_ub method."""
     slice_sizes_ub = np.array(
-        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 4, 1, 1, 1, 1, 3, 4, 1, 1, 1, 1, 6]
+        [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            3,
+            4,
+            1,
+            1,
+            1,
+            1,
+            3,
+            4,
+            1,
+            1,
+            1,
+            1,
+            6,
+        ]
     )
     slice_errors_ub = np.array(
-        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 3, 1, 1, 1, 1, 4]
+        [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            3,
+            1,
+            1,
+            1,
+            1,
+            1,
+            3,
+            1,
+            1,
+            1,
+            1,
+            4,
+        ]
     )
     max_slice_errors_ub = np.array(
-        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+        [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+        ]
     )
 
     computed = benchmark(
@@ -136,7 +222,10 @@ def test_score(benchmark, basic_test_data):
     n_row_x_encoded = 8
 
     computed = benchmark(
-        basic_test_data["slicefinder_model"]._score, slice_sizes, slice_errors, n_row_x_encoded
+        basic_test_data["slicefinder_model"]._score,
+        slice_sizes,
+        slice_errors,
+        n_row_x_encoded,
     )
     expected = np.array(
         [
@@ -221,7 +310,9 @@ def test_get_pair_candidates(benchmark, basic_test_data):
     assert np.array_equal(computed.A, basic_test_data["candidates"].A)
 
 
-def test_get_pair_candidates_with_missing_parents_pruning(benchmark, basic_test_data):
+def test_get_pair_candidates_with_missing_parents_pruning(
+    benchmark, basic_test_data
+):
     """Test _get_pair_candidates where missing parents are present in pruning."""
     slices = sp.csr_matrix(
         [
@@ -250,7 +341,9 @@ def test_get_pair_candidates_with_missing_parents_pruning(benchmark, basic_test_
     )
     slicefinder_model_parents_pruning.average_error_ = 0.4
 
-    expected = np.array([[False, False, True, False, False, True, True, False]])
+    expected = np.array(
+        [[False, False, True, False, False, True, True, False]]
+    )
 
     computed = benchmark(
         slicefinder_model_parents_pruning._get_pair_candidates,
@@ -323,7 +416,9 @@ def test_experiments(benchmark, experiments, experiment_name):
         experiment.input_errors,
     )
     computed_top_k_slices = slicefinder_model.top_slices_
-    assert np.array_equal(computed_top_k_slices, experiment.expected_top_k_slices)
+    assert np.array_equal(
+        computed_top_k_slices, experiment.expected_top_k_slices
+    )
 
 
 def test_transform(benchmark, basic_test_data):
@@ -333,17 +428,23 @@ def test_transform(benchmark, basic_test_data):
         basic_test_data["X"],
         basic_test_data["errors"],
     )
-    expected = np.array([[1, 1], [1, 1], [1, 1], [1, 0], [0, 0], [0, 0], [0, 0], [0, 0]])
+    expected = np.array(
+        [[1, 1], [1, 1], [1, 1], [1, 0], [0, 0], [0, 0], [0, 0], [0, 0]]
+    )
     assert np.array_equal(computed, expected)
 
 
 def test_get_slice(benchmark, basic_test_data):
     """Test get_slice method."""
-    basic_test_data["slicefinder_model"].fit(basic_test_data["X"], basic_test_data["errors"])
+    basic_test_data["slicefinder_model"].fit(
+        basic_test_data["X"], basic_test_data["errors"]
+    )
     computed_slice = benchmark(
         basic_test_data["slicefinder_model"].get_slice,
         basic_test_data["X"],
         0,
     )
-    expected_slice = np.array([[1, 1, 1, 3], [1, 1, 2, 3], [1, 1, 3, 3], [1, 1, 4, 1]])
+    expected_slice = np.array(
+        [[1, 1, 1, 3], [1, 1, 2, 3], [1, 1, 3, 3], [1, 1, 4, 1]]
+    )
     assert np.array_equal(computed_slice, expected_slice)

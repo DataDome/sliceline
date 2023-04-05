@@ -24,8 +24,8 @@ class Slicefinder(BaseEstimator, TransformerMixin):
 
     Given an input dataset (`X`) and a model error vector (`errors`), SliceLine finds
     the `k` slices in `X` that identify where the model performs significantly worse.
-    A slice is a subspace of `X` defined by one or more predicates. The maximal dimension
-    of this subspace is controlled by `max_l`.
+    A slice is a subspace of `X` defined by one or more predicates.
+    The maximal dimension of this subspace is controlled by `max_l`.
 
     The slice scoring function is the linear combination of two objectives:
         - Find sufficiently large slices, with more than `min_sup` elements
@@ -55,7 +55,8 @@ class Slicefinder(BaseEstimator, TransformerMixin):
     min_sup: int or float, default=10
         Minimum support threshold.
         Inspired by frequent itemset mining, it ensures statistical significance.
-        If `min_sup` is a float (0 < `min_sup` < 1), it represents the faction of the input dataset (`X`)
+        If `min_sup` is a float (0 < `min_sup` < 1),
+            it represents the faction of the input dataset (`X`).
 
     verbose: bool, default=True
         Controls the verbosity.
@@ -71,7 +72,8 @@ class Slicefinder(BaseEstimator, TransformerMixin):
 
     References
     ----------
-    `SliceLine: Fast, Linear-Algebra-based Slice Finding for ML Model Debugging <https://mboehm7.github.io/resources/sigmod2021b_sliceline.pdf>`__,
+    `SliceLine: Fast, Linear-Algebra-based Slice Finding for ML Model Debugging
+    <https://mboehm7.github.io/resources/sigmod2021b_sliceline.pdf>`__,
     from *Svetlana Sagadeeva* and *Matthias Boehm* of Graz University of Technology.
     """
 
@@ -108,9 +110,8 @@ class Slicefinder(BaseEstimator, TransformerMixin):
         if self.max_l <= 0:
             raise ValueError(f"Invalid 'max_l' parameter: {self.max_l}")
 
-        if (
-            self.min_sup < 0 or
-            (isinstance(self.min_sup, float) and self.min_sup >= 1)
+        if self.min_sup < 0 or (
+            isinstance(self.min_sup, float) and self.min_sup >= 1
         ):
             raise ValueError(f"Invalid 'min_sup' parameter: {self.min_sup}")
 
@@ -228,9 +229,9 @@ class Slicefinder(BaseEstimator, TransformerMixin):
         slice_candidates = self._top_slices_enc @ X_encoded.T
 
         # self._top_slices_enc.sum(axis=1) is the number of predicate(s) for each top_slices_
-        slices_masks = (slice_candidates == self._top_slices_enc.sum(axis=1)).A.astype(
-            int
-        )
+        slices_masks = (
+            slice_candidates == self._top_slices_enc.sum(axis=1)
+        ).A.astype(int)
 
         return slices_masks
 
@@ -243,8 +244,12 @@ class Slicefinder(BaseEstimator, TransformerMixin):
     def _dummify(array: np.ndarray, n_col_x_encoded: int) -> sp.csr_matrix:
         """Dummify `array` with respect to `n_col_x_encoded`.
         Assumption: v does not contain any 0."""
-        assert 0 not in array, "Modality 0 is not expected to be one-hot encoded."
-        one_hot_encoding = sp.lil_matrix((array.size, n_col_x_encoded), dtype=bool)
+        assert (
+            0 not in array
+        ), "Modality 0 is not expected to be one-hot encoded."
+        one_hot_encoding = sp.lil_matrix(
+            (array.size, n_col_x_encoded), dtype=bool
+        )
         one_hot_encoding[np.arange(array.size), array - 1] = True
         return one_hot_encoding.tocsr()
 
@@ -257,14 +262,18 @@ class Slicefinder(BaseEstimator, TransformerMixin):
     ) -> Tuple[sp.csr_matrix, np.ndarray]:
         """Add new `slices` to `top_k_slices` and update the top-k slices."""
         # prune invalid min_sup and scores
-        valid_slices_mask = (statistics[:, 3] >= self.min_sup) & (statistics[:, 0] > 0)
+        valid_slices_mask = (statistics[:, 3] >= self.min_sup) & (
+            statistics[:, 0] > 0
+        )
         if np.sum(valid_slices_mask) != 0:
             slices, statistics = (
                 slices[valid_slices_mask],
                 statistics[valid_slices_mask],
             )
 
-            if (slices.shape[1] != top_k_slices.shape[1]) & (slices.shape[1] == 1):
+            if (slices.shape[1] != top_k_slices.shape[1]) & (
+                slices.shape[1] == 1
+            ):
                 slices, statistics = slices.T, statistics.T
 
             # evaluated candidates and previous top-k
@@ -272,7 +281,9 @@ class Slicefinder(BaseEstimator, TransformerMixin):
             statistics = np.concatenate([top_k_statistics, statistics])
 
             # extract top-k
-            top_slices_bool = rankdata(-statistics[:, 0], method="min") <= self.k
+            top_slices_bool = (
+                rankdata(-statistics[:, 0], method="min") <= self.k
+            )
             top_k_slices, top_k_statistics = (
                 slices[top_slices_bool],
                 statistics[top_slices_bool],
@@ -298,7 +309,9 @@ class Slicefinder(BaseEstimator, TransformerMixin):
         potential_solutions = np.column_stack(
             (
                 self.min_sup * np.ones(slice_sizes_ub.shape[0]),
-                np.maximum(slice_errors_ub / max_slice_errors_ub, self.min_sup),
+                np.maximum(
+                    slice_errors_ub / max_slice_errors_ub, self.min_sup
+                ),
                 slice_sizes_ub,
             )
         )
@@ -307,7 +320,8 @@ class Slicefinder(BaseEstimator, TransformerMixin):
                 self.alpha
                 * (
                     np.minimum(
-                        potential_solutions.T * max_slice_errors_ub, slice_errors_ub
+                        potential_solutions.T * max_slice_errors_ub,
+                        slice_errors_ub,
                     ).T
                     / self.average_error_
                     - potential_solutions
@@ -325,7 +339,9 @@ class Slicefinder(BaseEstimator, TransformerMixin):
         max_slice_scores = min_slice_scores = -np.inf
         if top_k_statistics.shape[0] > 0:
             max_slice_scores = top_k_statistics[0, 0]
-            min_slice_scores = top_k_statistics[top_k_statistics.shape[0] - 1, 0]
+            min_slice_scores = top_k_statistics[
+                top_k_statistics.shape[0] - 1, 0
+            ]
         return max_slice_scores, min_slice_scores
 
     def _score(
@@ -354,7 +370,9 @@ class Slicefinder(BaseEstimator, TransformerMixin):
         max_slice_errors = slice_candidates.T.multiply(errors).max(axis=1).A
 
         # score of relative error and relative size
-        slice_scores = self._score(slice_sizes, slice_errors, x_encoded.shape[0])
+        slice_scores = self._score(
+            slice_sizes, slice_errors, x_encoded.shape[0]
+        )
         return np.column_stack(
             [slice_scores, slice_errors, max_slice_errors, slice_sizes]
         )
@@ -379,7 +397,9 @@ class Slicefinder(BaseEstimator, TransformerMixin):
         slices = self._dummify(attr, n_col_x_encoded)
 
         # score 1-slices and create initial top-k
-        slice_scores = self._score(slice_sizes, slice_errors, x_encoded.shape[0])
+        slice_scores = self._score(
+            slice_sizes, slice_errors, x_encoded.shape[0]
+        )
         statistics = np.column_stack(
             (slice_scores, slice_errors, max_slice_errors, slice_sizes)
         )
@@ -397,11 +417,15 @@ class Slicefinder(BaseEstimator, TransformerMixin):
     ) -> Tuple[sp.csr_matrix, np.ndarray]:
         """Prune invalid slices.
         Do not affect overall pruning effectiveness due to handling of missing parents."""
-        valid_slices_mask = (statistics[:, 3] >= self.min_sup) & (statistics[:, 1] > 0)
+        valid_slices_mask = (statistics[:, 3] >= self.min_sup) & (
+            statistics[:, 1] > 0
+        )
         return slices[valid_slices_mask], statistics[valid_slices_mask]
 
     @staticmethod
-    def _join_compatible_slices(slices: sp.csr_matrix, level: int) -> np.ndarray:
+    def _join_compatible_slices(
+        slices: sp.csr_matrix, level: int
+    ) -> np.ndarray:
         """Join compatible slices according to `level`."""
         slices_int = slices.astype(int)
         join = (slices_int @ slices_int.T).A == level - 2
@@ -409,7 +433,9 @@ class Slicefinder(BaseEstimator, TransformerMixin):
 
     @staticmethod
     def _combine_slices(
-        slices: sp.csr_matrix, statistics: np.ndarray, compatible_slices: np.ndarray
+        slices: sp.csr_matrix,
+        statistics: np.ndarray,
+        compatible_slices: np.ndarray,
     ) -> Tuple[sp.csr_matrix, np.ndarray, np.ndarray, np.ndarray]:
         """Combine slices by exploiting parents node statistics."""
         parent_1_idx, parent_2_idx = np.where(compatible_slices == 1)
@@ -459,7 +485,9 @@ class Slicefinder(BaseEstimator, TransformerMixin):
         """Prepare IDs for deduplication and pruning."""
         ids = np.zeros(pair_candidates.shape[0])
         dom = feature_domains + 1
-        for j, (start, end) in enumerate(zip(feature_offset_start, feature_offset_end)):
+        for j, (start, end) in enumerate(
+            zip(feature_offset_start, feature_offset_end)
+        ):
             sub_pair_candidates = pair_candidates[:, start:end]
             # sub_p should not contain multiple True on the same line
             i = sub_pair_candidates.argmax(axis=1).T + np.any(
@@ -510,7 +538,10 @@ class Slicefinder(BaseEstimator, TransformerMixin):
             return sp.csr_matrix(np.empty((0, slices.shape[1])))
 
         ids = self._prepare_deduplication_and_pruning(
-            feature_offset_start, feature_offset_end, feature_domains, pair_candidates
+            feature_offset_start,
+            feature_offset_end,
+            feature_domains,
+            pair_candidates,
         )
 
         # remove duplicate candidates and select corresponding statistics
@@ -579,7 +610,9 @@ class Slicefinder(BaseEstimator, TransformerMixin):
             np.zeros((0, 4)),
         )
 
-        max_slice_scores, min_slice_scores = self._analyse_top_k(top_k_statistics)
+        max_slice_scores, min_slice_scores = self._analyse_top_k(
+            top_k_statistics
+        )
         logger.debug(
             "Initial top-K: count=%i, max=%f, min=%f"
             % (top_k_slices.shape[0], max_slice_scores, min_slice_scores)
@@ -589,7 +622,11 @@ class Slicefinder(BaseEstimator, TransformerMixin):
         # termination condition (max #feature levels)
         level = 1
         min_condition = min(input_x.shape[1], self.max_l)
-        while (slices.shape[0] > 0) & (slices.sum() > 0) & (level < min_condition):
+        while (
+            (slices.shape[0] > 0)
+            & (slices.sum() > 0)
+            & (level < min_condition)
+        ):
             level += 1
 
             # enumerate candidate join pairs, including size/error pruning
@@ -620,8 +657,12 @@ class Slicefinder(BaseEstimator, TransformerMixin):
                 slices, statistics, top_k_slices, top_k_statistics
             )
 
-            max_slice_scores, min_slice_scores = self._analyse_top_k(top_k_statistics)
-            valid = np.sum((statistics[:, 3] >= self.min_sup) & (statistics[:, 1] > 0))
+            max_slice_scores, min_slice_scores = self._analyse_top_k(
+                top_k_statistics
+            )
+            valid = np.sum(
+                (statistics[:, 3] >= self.min_sup) & (statistics[:, 1] > 0)
+            )
             logger.debug(
                 " -- valid slices after eval: %s/%i" % (valid, slices.shape[0])
             )
@@ -634,6 +675,8 @@ class Slicefinder(BaseEstimator, TransformerMixin):
         if top_k_slices.shape[0] == 0:
             self.top_slices_ = np.empty((0, input_x.shape[1]))
         else:
-            self.top_slices_ = self._one_hot_encoder.inverse_transform(top_k_slices)
+            self.top_slices_ = self._one_hot_encoder.inverse_transform(
+                top_k_slices
+            )
 
         logger.debug("Terminated at level %i." % level)

@@ -39,7 +39,8 @@ class Experiment:
     min_sup: int or float, default=10
         Minimum support threshold.
         Inspired by frequent itemset mining, it ensures statistical significance.
-        If `min_sup` is a float (0 < `min_sup` < 1), it represents the faction of the input dataset (`X`)
+        If `min_sup` is a float (0 < `min_sup` < 1),
+            it represents the faction of the input dataset (`X`)
 
     verbose: bool, default=True
         Controls the verbosity.

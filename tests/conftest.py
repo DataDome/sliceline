@@ -122,7 +122,9 @@ def experiments():
         ]
     ).T
     errors_1 = np.array([True] * n_small + [False] * n_small)
-    expected_top_slices_1 = np.array([[1, 1, None], [None, 1, 2], [1, None, 2]])
+    expected_top_slices_1 = np.array(
+        [[1, 1, None], [None, 1, 2], [1, None, 2]]
+    )
     experiment_1 = Experiment(X_1, errors_1, expected_top_slices_1)
 
     # Experiment 2: Experiment 1 + more columns and different order
@@ -154,7 +156,9 @@ def experiments():
         ]
     ).T
     errors_3 = np.array([1] * n + [0] * n)
-    expected_top_slices_3 = np.array([[1.0, 1.0, None], [1.0, None, None], [None, 1.0, None]])
+    expected_top_slices_3 = np.array(
+        [[1.0, 1.0, None], [1.0, None, None], [None, 1.0, None]]
+    )
     experiment_3 = Experiment(X_3, errors_3, expected_top_slices_3)
 
     # Experiment 4: Experiment 3 + more columns
@@ -172,19 +176,28 @@ def experiments():
     ).T
     errors_4 = np.array([1] * n + [0] * n)
     expected_top_slices_4 = np.array(
-        [[1.0, 1.0, None, None, None, None], [1.0, None, 3.0, None, None, None]]
+        [
+            [1.0, 1.0, None, None, None, None],
+            [1.0, None, 3.0, None, None, None],
+        ]
     )
     experiment_4 = Experiment(X_4, errors_4, expected_top_slices_4)
 
     # Experiment 5: Experiment 4 w/ min_sup=50
     expected_top_slices_5 = np.array(
-        [[1.0, 1.0, None, None, None, None], [1.0, None, 3.0, None, None, None]]
+        [
+            [1.0, 1.0, None, None, None, None],
+            [1.0, None, 3.0, None, None, None],
+        ]
     )
     experiment_5 = Experiment(X_4, errors_4, expected_top_slices_5, min_sup=50)
 
     # Experiment 6: Experiment 4 w/ max_l=1
     expected_top_slices_6 = np.array(
-        [[1.0, None, None, None, None, None], [None, 1.0, None, None, None, None]]
+        [
+            [1.0, None, None, None, None, None],
+            [None, 1.0, None, None, None, None],
+        ]
     )
     experiment_6 = Experiment(X_4, errors_4, expected_top_slices_6, max_l=1)
 
@@ -212,7 +225,12 @@ def experiments():
     # Experiment 9: Experiment 1 w/ float label
     np.random.seed(9)
     errors_9 = (
-        np.concatenate([np.random.randint(1, 61, n_small), np.random.randint(41, 101, n_small)])
+        np.concatenate(
+            [
+                np.random.randint(1, 61, n_small),
+                np.random.randint(41, 101, n_small),
+            ]
+        )
         / 100
     )
     expected_top_slices_9 = np.array([[2.0, None, None], [2.0, 1.0, None]])
@@ -252,9 +270,16 @@ def experiments():
     ).T
     errors_11 = np.array([1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0])
     expected_top_slices_11 = np.array(
-        [[1.0, 1.0, 1.0, None], [None, 1.0, 1.0, None], [1, None, 1, None], [1, 1, None, None]]
+        [
+            [1.0, 1.0, 1.0, None],
+            [None, 1.0, 1.0, None],
+            [1, None, 1, None],
+            [1, 1, None, None],
+        ]
     )
-    experiment_11 = Experiment(X_11, errors_11, expected_top_slices_11, max_l=3)
+    experiment_11 = Experiment(
+        X_11, errors_11, expected_top_slices_11, max_l=3
+    )
 
     # Experiment 12: max_l=4
     X_12 = np.array(
@@ -276,7 +301,9 @@ def experiments():
             [1, 1, 1, None, None],
         ]
     )
-    experiment_12 = Experiment(X_12, errors_12, expected_top_slices_12, max_l=4)
+    experiment_12 = Experiment(
+        X_12, errors_12, expected_top_slices_12, max_l=4
+    )
 
     # Experiment 13: mixed types
     X_13 = np.array(
@@ -289,7 +316,9 @@ def experiments():
         dtype=object,
     ).T
     errors_13 = np.array([1, 1, 1, 1, 0, 0, 0, 0])
-    expected_top_slices_13 = np.array([[1, "a", None, None], [None, "a", None, 3]])
+    expected_top_slices_13 = np.array(
+        [[1, "a", None, None], [None, "a", None, 3]]
+    )
     experiment_13 = Experiment(X_13, errors_13, expected_top_slices_13)
 
     # Experiment 14: Experiment 4 w/ min_sup=10
@@ -299,19 +328,87 @@ def experiments():
             [1.0, None, 3.0, None, None, None],
         ]
     )
-    experiment_14 = Experiment(X_4, errors_4, expected_top_slices_14, min_sup=10)
+    experiment_14 = Experiment(
+        X_4, errors_4, expected_top_slices_14, min_sup=10
+    )
 
     # Experiment 15: Experiment 4 w/ alpha=0.5
     expected_top_slices_15 = np.empty((0, 6))
-    experiment_15 = Experiment(X_4, errors_4, expected_top_slices_15, alpha=0.5)
+    experiment_15 = Experiment(
+        X_4, errors_4, expected_top_slices_15, alpha=0.5
+    )
 
     # Experiment 16: Experiment with missing parent pruning
     X_16 = np.array(
         [
-            ["g", "g", "g", "g", "g", "g", "a", "a", "a", "a", "a", "a", "a", "a", "a"],
-            ["b", "b", "b", "b", "b", "b", "b", "b", "b", "b", "b", "b", "f", "f", "f"],
-            ["h", "h", "h", "h", "c", "c", "c", "c", "h", "h", "h", "h", "h", "h", "h"],
-            ["d", "d", "d", "d", "d", "d", "d", "d", "d", "d", "d", "d", "e", "e", "e"],
+            [
+                "g",
+                "g",
+                "g",
+                "g",
+                "g",
+                "g",
+                "a",
+                "a",
+                "a",
+                "a",
+                "a",
+                "a",
+                "a",
+                "a",
+                "a",
+            ],
+            [
+                "b",
+                "b",
+                "b",
+                "b",
+                "b",
+                "b",
+                "b",
+                "b",
+                "b",
+                "b",
+                "b",
+                "b",
+                "f",
+                "f",
+                "f",
+            ],
+            [
+                "h",
+                "h",
+                "h",
+                "h",
+                "c",
+                "c",
+                "c",
+                "c",
+                "h",
+                "h",
+                "h",
+                "h",
+                "h",
+                "h",
+                "h",
+            ],
+            [
+                "d",
+                "d",
+                "d",
+                "d",
+                "d",
+                "d",
+                "d",
+                "d",
+                "d",
+                "d",
+                "d",
+                "d",
+                "e",
+                "e",
+                "e",
+            ],
         ],
         dtype=object,
     ).T
@@ -326,10 +423,12 @@ def experiments():
         [
             [1.0, 1.0, None, None, None, None],
             [1.0, None, None, None, None, None],
-            [None, 1.0, None, None, None, None]
+            [None, 1.0, None, None, None, None],
         ]
     )
-    experiment_17 = Experiment(X_4, errors_4, expected_top_slices_17, min_sup=0.5)
+    experiment_17 = Experiment(
+        X_4, errors_4, expected_top_slices_17, min_sup=0.5
+    )
 
     return {
         "experiment_1": experiment_1,
@@ -348,5 +447,5 @@ def experiments():
         "experiment_14": experiment_14,
         "experiment_15": experiment_15,
         "experiment_16": experiment_16,
-        "experiment_17": experiment_17
+        "experiment_17": experiment_17,
     }
