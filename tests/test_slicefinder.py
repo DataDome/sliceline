@@ -368,13 +368,35 @@ def test_search_slices(benchmark, basic_test_data):
         basic_test_data["errors"],
     )
     computed_top_k_slices = basic_test_data["slicefinder_model"].top_slices_
+    computed_top_k_slices_statistics_ = basic_test_data[
+        "slicefinder_model"
+    ].top_slices_statistics_
     expected_top_k_slices = np.array(
         [
             [1, 1, None, None],
             [None, 1, None, 3],
         ]
     )
+    expected_top_k_slices_statistics = [
+        {
+            "slice_score": 0.8999999999999999,
+            "sum_slice_error": 4.0,
+            "max_slice_error": 1.0,
+            "slice_size": 4.0,
+            "slice_average_error": 1.0,
+        },
+        {
+            "slice_score": 0.8666666666666666,
+            "sum_slice_error": 3.0,
+            "max_slice_error": 1.0,
+            "slice_size": 3.0,
+            "slice_average_error": 1.0,
+        },
+    ]
     assert np.array_equal(computed_top_k_slices, expected_top_k_slices)
+    assert (
+        computed_top_k_slices_statistics_ == expected_top_k_slices_statistics
+    )
 
 
 @pytest.mark.parametrize(
@@ -416,8 +438,13 @@ def test_experiments(benchmark, experiments, experiment_name):
         experiment.input_errors,
     )
     computed_top_k_slices = slicefinder_model.top_slices_
+    computed_top_k_slices_statistics = slicefinder_model.top_slices_statistics_
     assert np.array_equal(
         computed_top_k_slices, experiment.expected_top_k_slices
+    )
+    assert (
+        computed_top_k_slices_statistics
+        == experiment.expected_top_k_slices_statistics
     )
 
 

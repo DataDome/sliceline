@@ -679,4 +679,28 @@ class Slicefinder(BaseEstimator, TransformerMixin):
                 top_k_slices
             )
 
+        # compute slices' average errors
+        top_k_statistics = np.column_stack(
+            (
+                top_k_statistics,
+                np.divide(top_k_statistics[:, 1], top_k_statistics[:, 3]),
+            )
+        )
+
+        # transform statistics to a list of dict
+        statistics_names = [
+            "slice_score",
+            "sum_slice_error",
+            "max_slice_error",
+            "slice_size",
+            "slice_average_error",
+        ]
+        self.top_slices_statistics_ = [
+            {
+                stat_name: stat_value
+                for stat_value, stat_name in zip(statistic, statistics_names)
+            }
+            for statistic in top_k_statistics
+        ]
+
         logger.debug("Terminated at level %i." % level)
