@@ -29,3 +29,16 @@ pytest-benchmark = "^3.4.1"
 pytest-cov = "^3.0.0"
 Sphinx = "^4.0.0"
 sphinx-rtd-theme = "^1.0.0"
+
+[tool.black]
+line-length = 79
+include = '\.pyi?$'
+
+[tool.isort]
+profile = "black"
+
+[tool.coverage.run]
+omit = [".*", "*/site-packages/*", "tests/*", "*/validation.py"]
+
+[tool.coverage.report]
+fail_under = 80
