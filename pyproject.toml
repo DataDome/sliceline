@@ -31,7 +31,6 @@ Sphinx = "^4.0.0"
 sphinx-rtd-theme = "^1.0.0"
 
 [tool.black]
-build-backend = "poetry.core.masonry.api"
 line-length = 79
 include = '\.pyi?$'
 
