@@ -195,7 +195,7 @@ class Slicefinder(BaseEstimator, TransformerMixin):
         Parameters
         ----------
         X: array-like of shape (n_samples, n_features)
-            Training data, where `n_samples` is the number of samples
+            Dataset, where `n_samples` is the number of samples
             and `n_features` is the number of features.
 
         slice_index: int
@@ -209,7 +209,7 @@ class Slicefinder(BaseEstimator, TransformerMixin):
         self._check_top_slices()
 
         # Input validation
-        X = check_array(X)
+        X = check_array(X, force_all_finite=False)
 
         slices_masks = self._get_slices_masks(X)
 
