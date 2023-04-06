@@ -125,7 +125,32 @@ def experiments():
     expected_top_slices_1 = np.array(
         [[1, 1, None], [None, 1, 2], [1, None, 2]]
     )
-    experiment_1 = Experiment(X_1, errors_1, expected_top_slices_1)
+    expected_top_slices_statistics_1 = [
+        {
+            "slice_score": 0.8999999999999999,
+            "sum_slice_error": 10.0,
+            "max_slice_error": 1.0,
+            "slice_size": 10.0,
+            "slice_average_error": 1.0,
+        },
+        {
+            "slice_score": 0.5166666666666666,
+            "sum_slice_error": 5.0,
+            "max_slice_error": 1.0,
+            "slice_size": 6.0,
+            "slice_average_error": 0.8333333333333334,
+        },
+        {
+            "slice_score": 0.5166666666666666,
+            "sum_slice_error": 5.0,
+            "max_slice_error": 1.0,
+            "slice_size": 6.0,
+            "slice_average_error": 0.8333333333333334,
+        },
+    ]
+    experiment_1 = Experiment(
+        X_1, errors_1, expected_top_slices_1, expected_top_slices_statistics_1
+    )
 
     # Experiment 2: Experiment 1 + more columns and different order
     np.random.seed(2)
@@ -143,7 +168,25 @@ def experiments():
     expected_top_slices_2 = np.array(
         [[None, 1, None, None, 1, None], [None, None, 4, None, 1, None]]
     )
-    experiment_2 = Experiment(X_2, errors_2, expected_top_slices_2)
+    expected_top_slices_statistics_2 = [
+        {
+            "slice_score": 0.8999999999999999,
+            "sum_slice_error": 10.0,
+            "max_slice_error": 1.0,
+            "slice_size": 10.0,
+            "slice_average_error": 1.0,
+        },
+        {
+            "slice_score": 0.6666666666666663,
+            "sum_slice_error": 3.0,
+            "max_slice_error": 1.0,
+            "slice_size": 3.0,
+            "slice_average_error": 1.0,
+        },
+    ]
+    experiment_2 = Experiment(
+        X_2, errors_2, expected_top_slices_2, expected_top_slices_statistics_2
+    )
 
     # Experiment 3: Experiment 1 + more rows
     np.random.seed(3)
@@ -159,7 +202,32 @@ def experiments():
     expected_top_slices_3 = np.array(
         [[1.0, 1.0, None], [1.0, None, None], [None, 1.0, None]]
     )
-    experiment_3 = Experiment(X_3, errors_3, expected_top_slices_3)
+    expected_top_slices_statistics_3 = [
+        {
+            "slice_score": 0.8999999999999999,
+            "sum_slice_error": 100.0,
+            "max_slice_error": 1.0,
+            "slice_size": 100.0,
+            "slice_average_error": 1.0,
+        },
+        {
+            "slice_score": 0.29999999999999993,
+            "sum_slice_error": 100.0,
+            "max_slice_error": 1.0,
+            "slice_size": 150.0,
+            "slice_average_error": 0.6666666666666666,
+        },
+        {
+            "slice_score": 0.29999999999999993,
+            "sum_slice_error": 100.0,
+            "max_slice_error": 1.0,
+            "slice_size": 150.0,
+            "slice_average_error": 0.6666666666666666,
+        },
+    ]
+    experiment_3 = Experiment(
+        X_3, errors_3, expected_top_slices_3, expected_top_slices_statistics_3
+    )
 
     # Experiment 4: Experiment 3 + more columns
     np.random.seed(4)
@@ -181,7 +249,25 @@ def experiments():
             [1.0, None, 3.0, None, None, None],
         ]
     )
-    experiment_4 = Experiment(X_4, errors_4, expected_top_slices_4)
+    expected_top_slices_statistics_4 = [
+        {
+            "slice_score": 0.8999999999999999,
+            "sum_slice_error": 100.0,
+            "max_slice_error": 1.0,
+            "slice_size": 100.0,
+            "slice_average_error": 1.0,
+        },
+        {
+            "slice_score": 0.322222222222222,
+            "sum_slice_error": 40.0,
+            "max_slice_error": 1.0,
+            "slice_size": 54.0,
+            "slice_average_error": 0.7407407407407407,
+        },
+    ]
+    experiment_4 = Experiment(
+        X_4, errors_4, expected_top_slices_4, expected_top_slices_statistics_4
+    )
 
     # Experiment 5: Experiment 4 w/ min_sup=50
     expected_top_slices_5 = np.array(
@@ -190,7 +276,29 @@ def experiments():
             [1.0, None, 3.0, None, None, None],
         ]
     )
-    experiment_5 = Experiment(X_4, errors_4, expected_top_slices_5, min_sup=50)
+    expected_top_slices_statistics_5 = [
+        {
+            "slice_score": 0.8999999999999999,
+            "sum_slice_error": 100.0,
+            "max_slice_error": 1.0,
+            "slice_size": 100.0,
+            "slice_average_error": 1.0,
+        },
+        {
+            "slice_score": 0.322222222222222,
+            "sum_slice_error": 40.0,
+            "max_slice_error": 1.0,
+            "slice_size": 54.0,
+            "slice_average_error": 0.7407407407407407,
+        },
+    ]
+    experiment_5 = Experiment(
+        X_4,
+        errors_4,
+        expected_top_slices_5,
+        expected_top_slices_statistics_5,
+        min_sup=50,
+    )
 
     # Experiment 6: Experiment 4 w/ max_l=1
     expected_top_slices_6 = np.array(
@@ -199,7 +307,29 @@ def experiments():
             [None, 1.0, None, None, None, None],
         ]
     )
-    experiment_6 = Experiment(X_4, errors_4, expected_top_slices_6, max_l=1)
+    expected_top_slices_statistics_6 = [
+        {
+            "slice_score": 0.29999999999999993,
+            "sum_slice_error": 100.0,
+            "max_slice_error": 1.0,
+            "slice_size": 150.0,
+            "slice_average_error": 0.6666666666666666,
+        },
+        {
+            "slice_score": 0.29999999999999993,
+            "sum_slice_error": 100.0,
+            "max_slice_error": 1.0,
+            "slice_size": 150.0,
+            "slice_average_error": 0.6666666666666666,
+        },
+    ]
+    experiment_6 = Experiment(
+        X_4,
+        errors_4,
+        expected_top_slices_6,
+        expected_top_slices_statistics_6,
+        max_l=1,
+    )
 
     # Experiment 7: Experiment 4 w/ alpha=0.7
     expected_top_slices_7 = np.array(
@@ -209,7 +339,36 @@ def experiments():
             [None, 1.0, None, None, None, None],
         ]
     )
-    experiment_7 = Experiment(X_4, errors_4, expected_top_slices_7, alpha=0.7)
+    expected_top_slices_statistics_7 = [
+        {
+            "slice_score": 0.3999999999999999,
+            "sum_slice_error": 100.0,
+            "max_slice_error": 1.0,
+            "slice_size": 100.0,
+            "slice_average_error": 1.0,
+        },
+        {
+            "slice_score": 0.13333333333333325,
+            "sum_slice_error": 100.0,
+            "max_slice_error": 1.0,
+            "slice_size": 150.0,
+            "slice_average_error": 0.6666666666666666,
+        },
+        {
+            "slice_score": 0.13333333333333325,
+            "sum_slice_error": 100.0,
+            "max_slice_error": 1.0,
+            "slice_size": 150.0,
+            "slice_average_error": 0.6666666666666666,
+        },
+    ]
+    experiment_7 = Experiment(
+        X_4,
+        errors_4,
+        expected_top_slices_7,
+        expected_top_slices_statistics_7,
+        alpha=0.7,
+    )
 
     # Experiment 8: Experiment 4 w/ k=3
     expected_top_slices_8 = np.array(
@@ -220,7 +379,43 @@ def experiments():
             [None, 1.0, None, None, None, None],
         ]
     )
-    experiment_8 = Experiment(X_4, errors_4, expected_top_slices_8, k=3)
+    expected_top_slices_statistics_8 = [
+        {
+            "slice_score": 0.8999999999999999,
+            "sum_slice_error": 100.0,
+            "max_slice_error": 1.0,
+            "slice_size": 100.0,
+            "slice_average_error": 1.0,
+        },
+        {
+            "slice_score": 0.322222222222222,
+            "sum_slice_error": 40.0,
+            "max_slice_error": 1.0,
+            "slice_size": 54.0,
+            "slice_average_error": 0.7407407407407407,
+        },
+        {
+            "slice_score": 0.29999999999999993,
+            "sum_slice_error": 100.0,
+            "max_slice_error": 1.0,
+            "slice_size": 150.0,
+            "slice_average_error": 0.6666666666666666,
+        },
+        {
+            "slice_score": 0.29999999999999993,
+            "sum_slice_error": 100.0,
+            "max_slice_error": 1.0,
+            "slice_size": 150.0,
+            "slice_average_error": 0.6666666666666666,
+        },
+    ]
+    experiment_8 = Experiment(
+        X_4,
+        errors_4,
+        expected_top_slices_8,
+        expected_top_slices_statistics_8,
+        k=3,
+    )
 
     # Experiment 9: Experiment 1 w/ float label
     np.random.seed(9)
@@ -234,7 +429,25 @@ def experiments():
         / 100
     )
     expected_top_slices_9 = np.array([[2.0, None, None], [2.0, 1.0, None]])
-    experiment_9 = Experiment(X_1, errors_9, expected_top_slices_9)
+    expected_top_slices_statistics_9 = [
+        {
+            "slice_score": 0.3610508757297748,
+            "sum_slice_error": 4.609999999999999,
+            "max_slice_error": 0.99,
+            "slice_size": 5.0,
+            "slice_average_error": 0.9219999999999999,
+        },
+        {
+            "slice_score": 0.3610508757297748,
+            "sum_slice_error": 4.609999999999999,
+            "max_slice_error": 0.99,
+            "slice_size": 5.0,
+            "slice_average_error": 0.9219999999999999,
+        },
+    ]
+    experiment_9 = Experiment(
+        X_1, errors_9, expected_top_slices_9, expected_top_slices_statistics_9
+    )
 
     # Experiment 10: Bigger dataset
     np.random.seed(10)
@@ -257,7 +470,35 @@ def experiments():
             [None, 1.0, None, None, None, None],
         ]
     )
-    experiment_10 = Experiment(X_10, errors_10, expected_top_slices_10)
+    expected_top_slices_statistics_10 = [
+        {
+            "slice_score": 0.8999999999999999,
+            "sum_slice_error": 10000.0,
+            "max_slice_error": 1.0,
+            "slice_size": 10000.0,
+            "slice_average_error": 1.0,
+        },
+        {
+            "slice_score": 0.29999999999999993,
+            "sum_slice_error": 10000.0,
+            "max_slice_error": 1.0,
+            "slice_size": 15000.0,
+            "slice_average_error": 0.6666666666666666,
+        },
+        {
+            "slice_score": 0.29999999999999993,
+            "sum_slice_error": 10000.0,
+            "max_slice_error": 1.0,
+            "slice_size": 15000.0,
+            "slice_average_error": 0.6666666666666666,
+        },
+    ]
+    experiment_10 = Experiment(
+        X_10,
+        errors_10,
+        expected_top_slices_10,
+        expected_top_slices_statistics_10,
+    )
 
     # Experiment 11: max_l=3
     X_11 = np.array(
@@ -277,8 +518,42 @@ def experiments():
             [1, 1, None, None],
         ]
     )
+    expected_top_slices_statistics_11 = [
+        {
+            "slice_score": 0.8999999999999999,
+            "sum_slice_error": 6.0,
+            "max_slice_error": 1.0,
+            "slice_size": 6.0,
+            "slice_average_error": 1.0,
+        },
+        {
+            "slice_score": 0.44999999999999996,
+            "sum_slice_error": 6.0,
+            "max_slice_error": 1.0,
+            "slice_size": 8.0,
+            "slice_average_error": 0.75,
+        },
+        {
+            "slice_score": 0.44999999999999996,
+            "sum_slice_error": 6.0,
+            "max_slice_error": 1.0,
+            "slice_size": 8.0,
+            "slice_average_error": 0.75,
+        },
+        {
+            "slice_score": 0.44999999999999996,
+            "sum_slice_error": 6.0,
+            "max_slice_error": 1.0,
+            "slice_size": 8.0,
+            "slice_average_error": 0.75,
+        },
+    ]
     experiment_11 = Experiment(
-        X_11, errors_11, expected_top_slices_11, max_l=3
+        X_11,
+        errors_11,
+        expected_top_slices_11,
+        expected_top_slices_statistics_11,
+        max_l=3,
     )
 
     # Experiment 12: max_l=4
@@ -301,8 +576,49 @@ def experiments():
             [1, 1, 1, None, None],
         ]
     )
+    expected_top_slices_statistics_12 = [
+        {
+            "slice_score": 0.8999999999999999,
+            "sum_slice_error": 8.0,
+            "max_slice_error": 1.0,
+            "slice_size": 8.0,
+            "slice_average_error": 1.0,
+        },
+        {
+            "slice_score": 0.54,
+            "sum_slice_error": 8.0,
+            "max_slice_error": 1.0,
+            "slice_size": 10.0,
+            "slice_average_error": 0.8,
+        },
+        {
+            "slice_score": 0.54,
+            "sum_slice_error": 8.0,
+            "max_slice_error": 1.0,
+            "slice_size": 10.0,
+            "slice_average_error": 0.8,
+        },
+        {
+            "slice_score": 0.54,
+            "sum_slice_error": 8.0,
+            "max_slice_error": 1.0,
+            "slice_size": 10.0,
+            "slice_average_error": 0.8,
+        },
+        {
+            "slice_score": 0.54,
+            "sum_slice_error": 8.0,
+            "max_slice_error": 1.0,
+            "slice_size": 10.0,
+            "slice_average_error": 0.8,
+        },
+    ]
     experiment_12 = Experiment(
-        X_12, errors_12, expected_top_slices_12, max_l=4
+        X_12,
+        errors_12,
+        expected_top_slices_12,
+        expected_top_slices_statistics_12,
+        max_l=4,
     )
 
     # Experiment 13: mixed types
@@ -319,7 +635,28 @@ def experiments():
     expected_top_slices_13 = np.array(
         [[1, "a", None, None], [None, "a", None, 3]]
     )
-    experiment_13 = Experiment(X_13, errors_13, expected_top_slices_13)
+    expected_top_slices_statistics_13 = [
+        {
+            "slice_score": 0.8999999999999999,
+            "sum_slice_error": 4.0,
+            "max_slice_error": 1.0,
+            "slice_size": 4.0,
+            "slice_average_error": 1.0,
+        },
+        {
+            "slice_score": 0.8666666666666666,
+            "sum_slice_error": 3.0,
+            "max_slice_error": 1.0,
+            "slice_size": 3.0,
+            "slice_average_error": 1.0,
+        },
+    ]
+    experiment_13 = Experiment(
+        X_13,
+        errors_13,
+        expected_top_slices_13,
+        expected_top_slices_statistics_13,
+    )
 
     # Experiment 14: Experiment 4 w/ min_sup=10
     expected_top_slices_14 = np.array(
@@ -328,14 +665,39 @@ def experiments():
             [1.0, None, 3.0, None, None, None],
         ]
     )
+    expected_top_slices_statistics_14 = [
+        {
+            "slice_score": 0.8999999999999999,
+            "sum_slice_error": 100.0,
+            "max_slice_error": 1.0,
+            "slice_size": 100.0,
+            "slice_average_error": 1.0,
+        },
+        {
+            "slice_score": 0.322222222222222,
+            "sum_slice_error": 40.0,
+            "max_slice_error": 1.0,
+            "slice_size": 54.0,
+            "slice_average_error": 0.7407407407407407,
+        },
+    ]
     experiment_14 = Experiment(
-        X_4, errors_4, expected_top_slices_14, min_sup=10
+        X_4,
+        errors_4,
+        expected_top_slices_14,
+        expected_top_slices_statistics_14,
+        min_sup=10,
     )
 
     # Experiment 15: Experiment 4 w/ alpha=0.5
     expected_top_slices_15 = np.empty((0, 6))
+    expected_top_slices_statistics_15 = []
     experiment_15 = Experiment(
-        X_4, errors_4, expected_top_slices_15, alpha=0.5
+        X_4,
+        errors_4,
+        expected_top_slices_15,
+        expected_top_slices_statistics_15,
+        alpha=0.5,
     )
 
     # Experiment 16: Experiment with missing parent pruning
@@ -414,8 +776,15 @@ def experiments():
     ).T
     errors_16 = np.array([0] * 6 + [1] * 6 + [0] * 3)
     expected_top_slices_16 = np.empty((0, 4))
+    expected_top_slices_statistics_16 = []
     experiment_16 = Experiment(
-        X_16, errors_16, expected_top_slices_16, alpha=0.01, max_l=3, min_sup=7
+        X_16,
+        errors_16,
+        expected_top_slices_16,
+        expected_top_slices_statistics_16,
+        alpha=0.01,
+        max_l=3,
+        min_sup=7,
     )
 
     # Experiment 17: Experiment 4 w/ min_sup=0.1
@@ -426,8 +795,35 @@ def experiments():
             [None, 1.0, None, None, None, None],
         ]
     )
+    expected_top_slices_statistics_17 = [
+        {
+            "slice_score": 0.8999999999999999,
+            "sum_slice_error": 100.0,
+            "max_slice_error": 1.0,
+            "slice_size": 100.0,
+            "slice_average_error": 1.0,
+        },
+        {
+            "slice_score": 0.29999999999999993,
+            "sum_slice_error": 100.0,
+            "max_slice_error": 1.0,
+            "slice_size": 150.0,
+            "slice_average_error": 0.6666666666666666,
+        },
+        {
+            "slice_score": 0.29999999999999993,
+            "sum_slice_error": 100.0,
+            "max_slice_error": 1.0,
+            "slice_size": 150.0,
+            "slice_average_error": 0.6666666666666666,
+        },
+    ]
     experiment_17 = Experiment(
-        X_4, errors_4, expected_top_slices_17, min_sup=0.5
+        X_4,
+        errors_4,
+        expected_top_slices_17,
+        expected_top_slices_statistics_17,
+        min_sup=0.5,
     )
 
     return {
