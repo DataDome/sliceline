@@ -475,3 +475,30 @@ def test_get_slice(benchmark, basic_test_data):
         [[1, 1, 1, 3], [1, 1, 2, 3], [1, 1, 3, 3], [1, 1, 4, 1]]
     )
     assert np.array_equal(computed_slice, expected_slice)
+
+
+def test_get_slice_with_nan(benchmark, basic_test_data):
+    """Test get_slice method with NaN values in the dataset."""
+    basic_test_data["slicefinder_model"].fit(
+        basic_test_data["X"], basic_test_data["errors"]
+    )
+
+    dataset_nan_case = np.array(
+        [
+            [np.nan, 1, 1, 1, 1, 1, 2, 2],
+            [1, 1, 1, 1, 2, 2, 1, 1],
+            [1, 2, 3, np.nan, 5, 6, 7, 8],
+            [3, 3, 3, 1, 3, 1, 2, 1],
+        ]
+    ).T
+    computed_slice_nan_case = benchmark(
+        basic_test_data["slicefinder_model"].get_slice,
+        dataset_nan_case,
+        0,
+    )
+    expected_slice_nan_case = np.array(
+        [[1, 1, 2, 3], [1, 1, 3, 3], [1, 1, np.nan, 1]]
+    )
+    assert np.array_equal(
+        computed_slice_nan_case, expected_slice_nan_case, equal_nan=True
+    )
