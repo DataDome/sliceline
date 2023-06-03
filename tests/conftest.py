@@ -35,7 +35,7 @@ def basic_test_data():
     ).T
 
     # error or label of elements
-    # By default, the algorithm identifies slices targeting 0 of E.
+    # By default, the algorithm identifies slices targeting 1 of errors.
     errors = np.array([1, 1, 1, 1, 0, 0, 0, 0])
 
     slicefinder_model = slicefinder.Slicefinder(
