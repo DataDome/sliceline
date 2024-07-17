@@ -1,6 +1,7 @@
 """
 The experiment module implements the Experiment dataclass.
 """
+
 from dataclasses import dataclass
 from typing import Dict, List, Union
 

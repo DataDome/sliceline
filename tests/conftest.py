@@ -3,6 +3,7 @@ The conftest module implements two pytest fixtures:
 - basic_test_data
 - experiments
 """
+
 import numpy as np
 import pytest
 from scipy import sparse as sp
@@ -35,7 +36,7 @@ def basic_test_data():
     ).T
 
     # error or label of elements
-    # By default, the algorithm identifies slices targeting 0 of E.
+    # By default, the algorithm identifies slices targeting 1 of errors.
     errors = np.array([1, 1, 1, 1, 0, 0, 0, 0])
 
     slicefinder_model = slicefinder.Slicefinder(
