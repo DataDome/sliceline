@@ -1,6 +1,7 @@
 """
 The slicefinder module implements the Slicefinder class.
 """
+
 import logging
 from typing import Tuple, Union
 
@@ -426,7 +427,8 @@ class Slicefinder(BaseEstimator, TransformerMixin):
         self, slices: sp.csr_matrix, statistics: np.ndarray
     ) -> Tuple[sp.csr_matrix, np.ndarray]:
         """Prune invalid slices.
-        Do not affect overall pruning effectiveness due to handling of missing parents."""
+        Do not affect overall pruning effectiveness due to handling of missing parents.
+        """
         valid_slices_mask = (statistics[:, 3] >= self.min_sup) & (
             statistics[:, 1] > 0
         )

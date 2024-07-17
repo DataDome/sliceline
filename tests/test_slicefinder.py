@@ -2,6 +2,7 @@
 The test_slicefinder module tests slicefinder class and methods.
 Tests are run on different Experiments.
 """
+
 import numpy as np
 import pytest
 from scipy import sparse as sp
