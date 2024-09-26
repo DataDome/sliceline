@@ -19,7 +19,7 @@ def test_dummify(benchmark, basic_test_data):
         basic_test_data["n_col_x_encoded"],
     )
 
-    assert np.array_equal(computed.A, basic_test_data["slices"].A)
+    assert np.array_equal(computed.toarray(), basic_test_data["slices"].toarray())
 
 
 def test_maintain_top_k(benchmark, basic_test_data):
@@ -58,7 +58,7 @@ def test_maintain_top_k(benchmark, basic_test_data):
         ]
     )
 
-    assert np.array_equal(computed_tk.A, expected_tk.A)
+    assert np.array_equal(computed_tk.toarray(), expected_tk.toarray())
     assert np.array_equal(computed_tkc, expected_tkc)
 
 
@@ -278,7 +278,7 @@ def test_create_and_score_basic_slices(benchmark, basic_test_data):
             [0.42499999999999993, 3, 1, 4],
         ]
     )
-    assert np.array_equal(computed_slices.A, basic_test_data["slices"].A)
+    assert np.array_equal(computed_slices.toarray(), basic_test_data["slices"].toarray())
     assert np.array_equal(computed_statistics, expected_r)
 
 
@@ -308,7 +308,7 @@ def test_get_pair_candidates(benchmark, basic_test_data):
         basic_test_data["feature_offset_start"],
         basic_test_data["feature_offset_end"],
     )
-    assert np.array_equal(computed.A, basic_test_data["candidates"].A)
+    assert np.array_equal(computed.toarray(), basic_test_data["candidates"].toarray())
 
 
 def test_get_pair_candidates_with_missing_parents_pruning(
@@ -356,7 +356,7 @@ def test_get_pair_candidates_with_missing_parents_pruning(
         feature_domains=np.array([2, 2, 2, 2]),
         feature_offset_start=np.array([0, 2, 4, 6]),
         feature_offset_end=np.array([2, 4, 6, 8]),
-    ).A
+    ).toarray()
 
     assert np.array_equal(computed, expected)
 

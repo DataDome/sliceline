@@ -378,7 +378,7 @@ class Slicefinder(BaseEstimator, TransformerMixin):
         slice_candidates = x_encoded @ slices.T == level
         slice_sizes = slice_candidates.sum(axis=0).A[0]
         slice_errors = errors @ slice_candidates
-        max_slice_errors = slice_candidates.T.multiply(errors).max(axis=1).A
+        max_slice_errors = slice_candidates.T.multiply(errors).max(axis=1).toarray()
 
         # score of relative error and relative size
         slice_scores = self._score(
@@ -397,7 +397,7 @@ class Slicefinder(BaseEstimator, TransformerMixin):
         """Initialise 1-slices, i.e. slices with one predicate."""
         slice_sizes = x_encoded.sum(axis=0).A[0]
         slice_errors = errors @ x_encoded
-        max_slice_errors = x_encoded.T.multiply(errors).max(axis=1).A[:, 0]
+        max_slice_errors = x_encoded.T.multiply(errors).max(axis=1).toarray()[:, 0]
 
         # working set of active slices (#attr x #slices) and top-k
         valid_slices_mask = (slice_sizes >= self.min_sup) & (slice_errors > 0)
@@ -440,7 +440,7 @@ class Slicefinder(BaseEstimator, TransformerMixin):
     ) -> np.ndarray:
         """Join compatible slices according to `level`."""
         slices_int = slices.astype(int)
-        join = (slices_int @ slices_int.T).A == level - 2
+        join = (slices_int @ slices_int.T).toarray() == level - 2
         return np.triu(join, 1) * join
 
     @staticmethod
@@ -503,7 +503,7 @@ class Slicefinder(BaseEstimator, TransformerMixin):
             sub_pair_candidates = pair_candidates[:, start:end]
             # sub_p should not contain multiple True on the same line
             i = sub_pair_candidates.argmax(axis=1).T + np.any(
-                sub_pair_candidates.A, axis=1
+                sub_pair_candidates.toarray(), axis=1
             )
             ids = ids + i.A * np.prod(dom[(j + 1) : dom.shape[0]])
         return ids
