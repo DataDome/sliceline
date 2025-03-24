@@ -26,6 +26,7 @@ class Slicefinder(BaseEstimator, TransformerMixin):
     Given an input dataset (`X`) and a model error vector (`errors`), SliceLine finds
     the `k` slices in `X` that identify where the model performs significantly worse.
     A slice is a subspace of `X` defined by one or more predicates.
+
     The maximal dimension of this subspace is controlled by `max_l`.
 
     The slice scoring function is the linear combination of two objectives:
@@ -33,6 +34,7 @@ class Slicefinder(BaseEstimator, TransformerMixin):
           (high impact on the overall model)
         - With substantial errors
           (high negative impact on sub-group/model)
+
     The importance of each objective is controlled through a single parameter `alpha`.
 
     Slice enumeration and pruning techniques are done via sparse linear algebra.
@@ -54,31 +56,30 @@ class Slicefinder(BaseEstimator, TransformerMixin):
         In other words: the maximum number of predicate to define a slice.
 
     min_sup: int or float, default=10
-        Minimum support threshold.
-        Inspired by frequent itemset mining, it ensures statistical significance.
-        If `min_sup` is a float (0 < `min_sup` < 1),
-            it represents the faction of the input dataset (`X`).
+        Minimum support threshold. Inspired by frequent itemset mining,
+        it ensures statistical significance. If `min_sup` is a float (0 < `min_sup` < 1),
+        it represents the faction of the input dataset (`X`).
 
     verbose: bool, default=True
         Controls the verbosity.
 
     Attributes
     ----------
-    top_slices_: np.ndarray of shape (_n_features_out, number of columns of the input dataset)
+    top_slices: np.ndarray of shape (_n_features_out, number of columns of the input dataset)
         The `_n_features_out` slices with the highest score.
         `None` values in slices represent unused column in the slice.
 
-    average_error_: float
+    average_error: float
         Mean value of the input error.
 
-    top_slices_statistics_: list of dict of length `len(top_slices_)`
+    top_slices_statistics: list of dict of length `len(top_slices_)`
         The statistics of the slices found sorted by slice's scores.
         For each slice, the following statistics are stored:
-            - slice_score: the score of the slice (defined in `_score` method)
-            - sum_slice_error: the sum of all the errors in the slice
-            - max_slice_error: the maximum of all errors in the slice
-            - slice_size: the number of elements in the slice
-            - slice_average_error: the average error in the slice (sum_slice_error / slice_size)
+        - slice_score: the score of the slice (defined in `_score` method)
+        - sum_slice_error: the sum of all the errors in the slice
+        - max_slice_error: the maximum of all errors in the slice
+        - slice_size: the number of elements in the slice
+        - slice_average_error: the average error in the slice (sum_slice_error / slice_size)
 
     References
     ----------
