@@ -41,7 +41,7 @@ for a more thorough tutorial:
 🛠 Installation
 ---------------
 
-Sliceline is intended to work with **Python 3.9 or above**. Installation
+Sliceline is intended to work with **Python 3.10 or above**. Installation
 can be done with ``pip``:
 
 .. code:: sh
