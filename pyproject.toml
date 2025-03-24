@@ -4,7 +4,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "sliceline"
-version = "0.0.0" # This version is a generic placeholder. It should not be changed.
+version = "0.2.16"
 description = "✂️ Fast slice finding for Machine Learning model debugging."
 authors = ["Antoine de Daran"]
 readme = "README.rst"
