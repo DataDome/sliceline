@@ -15,7 +15,7 @@ documentation = "https://sliceline.readthedocs.io/en/stable/"
 [tool.poetry.dependencies]
 python = ">=3.10, <4"
 numpy = "^1.25"
-scikit-learn = "^1.5.0"
+scikit-learn = "^1.6.0"
 scipy = "^1.12"
 
 [tool.poetry.dev-dependencies]
