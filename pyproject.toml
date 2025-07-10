@@ -4,7 +4,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "sliceline"
-version = "0.2.18"
+version = "0.2.20"
 description = "✂️ Fast slice finding for Machine Learning model debugging."
 authors = ["Antoine de Daran"]
 readme = "README.rst"
