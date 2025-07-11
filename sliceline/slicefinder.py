@@ -10,7 +10,7 @@ from scipy import sparse as sp
 from scipy.stats import rankdata
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.preprocessing import OneHotEncoder
-from sklearn.utils.validation import check_is_fitted
+from sklearn.utils.validation import check_is_fitted, _check_feature_names
 
 from sliceline.validation import check_array, check_X_e
 
@@ -162,7 +162,7 @@ class Slicefinder(BaseEstimator, TransformerMixin):
         # Check that X and e have correct shape
         X_array, errors = check_X_e(X, errors, y_numeric=True)
 
-        self._check_feature_names(X, reset=True)
+        _check_feature_names(self, X, reset=True)
 
         self._search_slices(X_array, errors)
 
