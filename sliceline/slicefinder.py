@@ -487,6 +487,10 @@ class Slicefinder(BaseEstimator, TransformerMixin):
         For level==2 (looking for disjoint slices), uses dense format since
         most pairs are compatible. For higher levels, keeps sparse format.
         """
+        n_slices = slices.shape[0]
+        if n_slices == 0:
+            return sp.csr_matrix((0, 0), dtype=np.bool_)
+
         slices_int = slices.astype(int)
         join_counts = slices_int @ slices_int.T
 
@@ -503,12 +507,14 @@ class Slicefinder(BaseEstimator, TransformerMixin):
             )
         else:
             # For higher levels, most pairs won't match, so sparse is better
-            rows, cols = join_counts.nonzero()
-            data = np.asarray(join_counts[rows, cols]).ravel()
-            mask = (data == level - 2) & (rows < cols)
+            # Use dense conversion for smaller matrices to ensure consistent ordering
+            # This matches the original behavior and ensures deterministic results
+            join_dense = join_counts.toarray() == level - 2
+            join_upper = np.triu(join_dense, 1)
+            rows, cols = np.where(join_upper)
 
             return sp.csr_matrix(
-                (np.ones(mask.sum(), dtype=np.bool_), (rows[mask], cols[mask])),
+                (np.ones(len(rows), dtype=np.bool_), (rows, cols)),
                 shape=join_counts.shape,
                 dtype=np.bool_,
             )
