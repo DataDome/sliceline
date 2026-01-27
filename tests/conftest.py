@@ -201,7 +201,7 @@ def experiments():
     ).T
     errors_3 = np.array([1] * n + [0] * n)
     expected_top_slices_3 = np.array(
-        [[1, 1, None], [1, None, None], [None, 1, None]]
+        [[1, 1, None], [None, 1, None], [1, None, None]]
     )
     expected_top_slices_statistics_3 = [
         {
@@ -304,10 +304,11 @@ def experiments():
     # Experiment 6: Experiment 4 w/ max_l=1
     expected_top_slices_6 = np.array(
         [
-            [1, None, None, None, None, None],
             [None, 1, None, None, None, None],
+            [1, None, None, None, None, None],
         ]
     )
+    # Statistics have same values for both slices (both have equal scores)
     expected_top_slices_statistics_6 = [
         {
             "slice_score": 0.29999999999999993,
@@ -336,8 +337,8 @@ def experiments():
     expected_top_slices_7 = np.array(
         [
             [1, 1, None, None, None, None],
-            [1, None, None, None, None, None],
             [None, 1, None, None, None, None],
+            [1, None, None, None, None, None],
         ]
     )
     expected_top_slices_statistics_7 = [
@@ -376,8 +377,8 @@ def experiments():
         [
             [1, 1, None, None, None, None],
             [1, None, 3, None, None, None],
-            [1, None, None, None, None, None],
             [None, 1, None, None, None, None],
+            [1, None, None, None, None, None],
         ]
     )
     expected_top_slices_statistics_8 = [
@@ -467,8 +468,8 @@ def experiments():
     expected_top_slices_10 = np.array(
         [
             [1, 1, None, None, None, None],
-            [1, None, None, None, None, None],
             [None, 1, None, None, None, None],
+            [1, None, None, None, None, None],
         ]
     )
     expected_top_slices_statistics_10 = [
@@ -792,8 +793,8 @@ def experiments():
     expected_top_slices_17 = np.array(
         [
             [1, 1, None, None, None, None],
-            [1, None, None, None, None, None],
             [None, 1, None, None, None, None],
+            [1, None, None, None, None, None],
         ]
     )
     expected_top_slices_statistics_17 = [
