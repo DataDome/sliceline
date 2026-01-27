@@ -22,4 +22,4 @@ notebook:
 	uv run jupyter notebook
 
 execute-notebooks:
-	uv run jupyter nbconvert --execute --to notebook --inplace notebooks/*.ipynb --ExecutePreprocessor.timeout=300
+	uv run jupyter nbconvert --execute --to notebook --inplace notebooks/*.ipynb --ExecutePreprocessor.timeout=600
