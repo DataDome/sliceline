@@ -470,22 +470,54 @@ class Slicefinder(BaseEstimator, TransformerMixin):
     @staticmethod
     def _join_compatible_slices(
         slices: sp.csr_matrix, level: int
-    ) -> NDArray:
-        """Join compatible slices according to `level`."""
+    ) -> sp.csr_matrix:
+        """Join compatible slices keeping sparse format when beneficial.
+
+        Returns a sparse boolean matrix where entry (i,j) is True if slices
+        i and j are compatible for joining at the given level. Only upper
+        triangular entries (i < j) are populated.
+
+        For level==2 (looking for disjoint slices), uses dense format since
+        most pairs are compatible. For higher levels, keeps sparse format.
+        """
         slices_int = slices.astype(int)
-        # Here we can't use the .A shorthand because it is not
-        # implemented in all scipy versions for coo_matrix objects
-        join = (slices_int @ slices_int.T).toarray() == level - 2
-        return np.triu(join, 1) * join
+        join_counts = slices_int @ slices_int.T
+
+        if level == 2:
+            # For level 2, we're looking for pairs with dot product == 0
+            # Most pairs will match, so dense is more efficient
+            join_dense = join_counts.toarray() == 0
+            join_upper = np.triu(join_dense, 1)
+            rows, cols = np.where(join_upper)
+            return sp.csr_matrix(
+                (np.ones(len(rows), dtype=np.bool_), (rows, cols)),
+                shape=join_counts.shape,
+                dtype=np.bool_,
+            )
+        else:
+            # For higher levels, most pairs won't match, so sparse is better
+            rows, cols = join_counts.nonzero()
+            data = np.asarray(join_counts[rows, cols]).ravel()
+            mask = (data == level - 2) & (rows < cols)
+
+            return sp.csr_matrix(
+                (np.ones(mask.sum(), dtype=np.bool_), (rows[mask], cols[mask])),
+                shape=join_counts.shape,
+                dtype=np.bool_,
+            )
 
     @staticmethod
     def _combine_slices(
         slices: sp.csr_matrix,
         statistics: NDArray,
-        compatible_slices: NDArray,
+        compatible_slices: sp.csr_matrix,
     ) -> tuple[sp.csr_matrix, NDArray, NDArray, NDArray]:
-        """Combine slices by exploiting parents node statistics."""
-        parent_1_idx, parent_2_idx = np.where(compatible_slices == 1)
+        """Combine slices by exploiting parents node statistics.
+
+        Works with sparse compatible_slices matrix returned by
+        _join_compatible_slices.
+        """
+        parent_1_idx, parent_2_idx = compatible_slices.nonzero()
         pair_candidates = slices[parent_1_idx] + slices[parent_2_idx]
 
         slice_errors = np.minimum(
@@ -560,7 +592,7 @@ class Slicefinder(BaseEstimator, TransformerMixin):
         """Compute and prune plausible slices candidates."""
         compatible_slices = self._join_compatible_slices(slices, level)
 
-        if np.sum(compatible_slices) == 0:
+        if compatible_slices.nnz == 0:
             return sp.csr_matrix(np.empty((0, slices.shape[1])))
 
         (
