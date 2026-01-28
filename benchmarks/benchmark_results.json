@@ -1,0 +1,46 @@
+[
+  {
+    "cardinality": 10,
+    "n_samples": 10000,
+    "n_features": 5,
+    "result": {
+      "time_seconds": 0.06537966697942466,
+      "peak_memory_mb": 31.96645736694336,
+      "n_slices_found": 0,
+      "success": true
+    }
+  },
+  {
+    "cardinality": 100,
+    "n_samples": 10000,
+    "n_features": 5,
+    "result": {
+      "time_seconds": 2.1604590420029126,
+      "peak_memory_mb": 17.369812965393066,
+      "n_slices_found": 0,
+      "success": true
+    }
+  },
+  {
+    "cardinality": 500,
+    "n_samples": 10000,
+    "n_features": 5,
+    "result": {
+      "time_seconds": 56.57834662499954,
+      "peak_memory_mb": 1358.0376062393188,
+      "n_slices_found": 0,
+      "success": true
+    }
+  },
+  {
+    "cardinality": 1000,
+    "n_samples": 10000,
+    "n_features": 5,
+    "result": {
+      "time_seconds": 68.65791112501756,
+      "peak_memory_mb": 2941.912103652954,
+      "n_slices_found": 0,
+      "success": true
+    }
+  }
+]
