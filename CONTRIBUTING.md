@@ -20,10 +20,17 @@ The typical workflow for contributing to `sliceline` is:
 
 We encourage you to use a virtual environment. You'll want to activate it every time you want to work on `sliceline`.
 
-Create a virtual environment via Poetry:
+Install dependencies via uv:
 
 ```sh
 $ make init
+```
+
+Or manually:
+
+```sh
+$ pip install uv
+$ uv sync --all-extras
 ```
 
 Install the [pre-commit](https://pre-commit.com/) push hooks. This will run some code quality checks every time you push to GitHub.
@@ -36,6 +43,20 @@ You can optionally run `pre-commit` at any time as so:
 
 ```sh
 $ pre-commit run --all-files
+```
+
+## Code quality
+
+We use [Ruff](https://docs.astral.sh/ruff/) for linting and formatting. Run the following to check and fix issues:
+
+```sh
+$ make lint
+```
+
+Or to only check without fixing:
+
+```sh
+$ make check
 ```
 
 ## Documenting your change
@@ -61,6 +82,12 @@ These tests absolutely have to pass.
 
 ```sh
 $ make test
+```
+
+Or directly with pytest:
+
+```sh
+$ uv run pytest tests/
 ```
 
 **Notebook tests**

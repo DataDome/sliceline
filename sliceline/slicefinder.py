@@ -317,7 +317,13 @@ class Slicefinder(BaseEstimator, TransformerMixin):
                 slices[top_slices_bool],
                 statistics[top_slices_bool],
             )
-            top_slices_indices = np.argsort(-top_k_statistics[:, 0])
+            # Use lexsort for deterministic ordering: primary key is score
+            # (descending), secondary key is slice_size (descending) for
+            # tiebreaking between slices with equal scores. The last key in
+            # lexsort is the primary key.
+            top_slices_indices = np.lexsort(
+                (-top_k_statistics[:, 3], -top_k_statistics[:, 0])
+            )
             top_k_slices, top_k_statistics = (
                 top_k_slices[top_slices_indices],
                 top_k_statistics[top_slices_indices],
