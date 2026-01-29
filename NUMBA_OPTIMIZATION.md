@@ -20,12 +20,11 @@ sudo apt-get install llvm
 
 ### After installing LLVM
 ```bash
-# Uncomment numba in pyproject.toml:
-# numba = "^0.60.0"
+# Install with the optimized optional dependency:
+uv pip install sliceline[optimized]
 
-# Then install:
-poetry lock
-poetry install
+# Or install numba separately:
+uv pip install numba
 ```
 
 ## Implementation Plan
@@ -204,8 +203,7 @@ else:
 All existing tests should pass with Numba optimization enabled. The results should be numerically identical to the NumPy implementation.
 
 ```bash
-cd /Users/florentpajot/Documents/dev/sliceline-performance
-poetry run pytest tests/ -v
+uv run pytest tests/ -v
 ```
 
 ## Optional: Make Numba Truly Optional

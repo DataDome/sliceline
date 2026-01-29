@@ -23,8 +23,5 @@ jobs:
         run: make init
       - name: Run test
         run: make test
-      # Notebooks are skipped in CI due to long execution times that cause GitHub Actions timeouts.
-      # The California housing notebook with max_l=8 generates ~37,000 slice candidates.
-      # Notebooks can still be validated locally with: make execute-notebooks
-      # - name: Run notebooks
-      #   run: make execute-notebooks
+      - name: Run notebooks
+        run: make execute-notebooks

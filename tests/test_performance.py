@@ -1,7 +1,17 @@
-"""Performance benchmarks for Sliceline.
+"""Performance regression tests for Sliceline using pytest-benchmark.
 
-This module contains performance regression tests using pytest-benchmark.
-Run with: poetry run pytest tests/test_performance.py -v
+This module tests for performance regressions in the Sliceline codebase.
+It differs from benchmarks/benchmarks.py in purpose:
+
+- tests/test_performance.py: Automated regression testing integrated with CI/CD.
+  These tests ensure performance does not degrade across commits. They are designed
+  to be fast, repeatable, and can be compared across runs using pytest-benchmark.
+
+- benchmarks/benchmarks.py: Manual profiling scripts for detailed performance analysis.
+  These scripts produce JSON results files and detailed console output for analyzing
+  performance characteristics across different cardinality levels and dataset sizes.
+
+Run with: uv run pytest tests/test_performance.py -v --benchmark-only
 """
 
 import numpy as np
@@ -23,8 +33,12 @@ def _create_correlated_errors(X: np.ndarray, seed: int = 42) -> np.ndarray:
     # Create strongly differentiated error patterns
     mask_high_error = X[:, 0] == 1
     errors = np.zeros(n_samples)
-    errors[mask_high_error] = np.random.uniform(0.7, 1.0, mask_high_error.sum())
-    errors[~mask_high_error] = np.random.uniform(0.0, 0.3, (~mask_high_error).sum())
+    errors[mask_high_error] = np.random.uniform(
+        0.7, 1.0, mask_high_error.sum()
+    )
+    errors[~mask_high_error] = np.random.uniform(
+        0.0, 0.3, (~mask_high_error).sum()
+    )
 
     return errors
 
@@ -135,7 +149,9 @@ class TestInternalMethodsPerformance:
         # Create sparse slices matrix
         n_slices = 100
         n_features = 50
-        slices = sp.random(n_slices, n_features, density=0.1, format="csr", dtype=bool)
+        slices = sp.random(
+            n_slices, n_features, density=0.1, format="csr", dtype=bool
+        )
 
         def run_join():
             return Slicefinder._join_compatible_slices(slices, level=2)
@@ -147,7 +163,9 @@ class TestInternalMethodsPerformance:
         """Benchmark _join_compatible_slices() for level 3."""
         n_slices = 100
         n_features = 50
-        slices = sp.random(n_slices, n_features, density=0.1, format="csr", dtype=bool)
+        slices = sp.random(
+            n_slices, n_features, density=0.1, format="csr", dtype=bool
+        )
 
         def run_join():
             return Slicefinder._join_compatible_slices(slices, level=3)
@@ -235,7 +253,9 @@ class TestMemoryEfficiency:
         # Create large sparse matrix
         n_slices = 1000
         n_features = 200
-        slices = sp.random(n_slices, n_features, density=0.05, format="csr", dtype=bool)
+        slices = sp.random(
+            n_slices, n_features, density=0.05, format="csr", dtype=bool
+        )
 
         # Join operation should return sparse matrix
         result = Slicefinder._join_compatible_slices(slices, level=3)
@@ -247,7 +267,9 @@ class TestMemoryEfficiency:
         # Memory should be proportional to nnz, not n_slices^2
         # Dense would be ~8MB (1000*1000*8 bytes), sparse should be much smaller
         expected_max_memory = 1_000_000  # 1MB
-        actual_memory = result.data.nbytes + result.indices.nbytes + result.indptr.nbytes
+        actual_memory = (
+            result.data.nbytes + result.indices.nbytes + result.indptr.nbytes
+        )
         assert actual_memory < expected_max_memory, (
             f"Sparse matrix using {actual_memory} bytes, "
             f"expected < {expected_max_memory} bytes"
@@ -270,7 +292,9 @@ class TestMemoryEfficiency:
         # Memory should be proportional to nnz, not n_row * n_col
         # Dense would be ~80MB (10000*1000*8 bytes), sparse should be ~240KB
         expected_max_memory = 500_000  # 500KB
-        actual_memory = result.data.nbytes + result.indices.nbytes + result.indptr.nbytes
+        actual_memory = (
+            result.data.nbytes + result.indices.nbytes + result.indptr.nbytes
+        )
         assert actual_memory < expected_max_memory, (
             f"Sparse matrix using {actual_memory} bytes, "
             f"expected < {expected_max_memory} bytes"

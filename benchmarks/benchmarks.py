@@ -1,15 +1,16 @@
 """
-Cardinality Benchmark Script for Sliceline Performance Testing.
+Benchmark Script for Sliceline Performance Testing.
 
 This script profiles the performance of Slicefinder across different
-cardinality levels to measure the impact of optimizations.
+cardinality levels and dataset sizes to measure the impact of optimizations.
 
 Usage:
-    python benchmarks/cardinality_benchmark.py
+    python benchmarks/benchmarks.py
 
 Output:
-    - benchmark_results.json: Detailed results
-    - Console output with summary table
+    - benchmark_results.json: Cardinality benchmark results
+    - dataset_size_results.json: Dataset size scaling results
+    - Console output with summary tables
 """
 
 import json
@@ -51,7 +52,7 @@ def profile_implementation(X, errors, **kwargs):
         model.fit(X, errors)
 
         elapsed = time.perf_counter() - start
-        current, peak = tracemalloc.get_traced_memory()
+        _, peak = tracemalloc.get_traced_memory()
         tracemalloc.stop()
 
         return {
@@ -80,7 +81,7 @@ def profile_implementation(X, errors, **kwargs):
         }
 
 
-def run_benchmarks():
+def run_cardinality_benchmark():
     """Run comprehensive benchmarks across cardinality levels."""
     print("=" * 70)
     print("Sliceline Cardinality Benchmark")
@@ -128,7 +129,9 @@ def run_benchmarks():
     print("\n" + "=" * 70)
     print("Summary")
     print("=" * 70)
-    print(f"{'Cardinality':<12} {'Time (s)':<15} {'Memory (MB)':<15} {'Slices':<10}")
+    print(
+        f"{'Cardinality':<12} {'Time (s)':<15} {'Memory (MB)':<15} {'Slices':<10}"
+    )
     print("-" * 70)
 
     for r in results:
@@ -155,8 +158,12 @@ def run_benchmarks():
 
         for r in results[1:]:
             if r["result"]["success"]:
-                time_ratio = r["result"]["time_seconds"] / baseline["time_seconds"]
-                mem_ratio = r["result"]["peak_memory_mb"] / baseline["peak_memory_mb"]
+                time_ratio = (
+                    r["result"]["time_seconds"] / baseline["time_seconds"]
+                )
+                mem_ratio = (
+                    r["result"]["peak_memory_mb"] / baseline["peak_memory_mb"]
+                )
                 print(
                     f"  Cardinality {r['cardinality']}: "
                     f"{time_ratio:.1f}x time, {mem_ratio:.1f}x memory"
@@ -173,7 +180,7 @@ def run_benchmarks():
     return results
 
 
-def run_dataset_size_benchmarks():
+def run_dataset_size_benchmark():
     """Run benchmarks varying dataset size."""
     print("\n" + "=" * 70)
     print("Dataset Size Scaling Benchmark")
@@ -193,12 +200,18 @@ def run_dataset_size_benchmarks():
         X = np.random.randint(0, cardinality, size=(n_samples, n_features))
         errors = np.random.random(n_samples)
 
-        result = profile_implementation(X, errors, min_sup=max(10, n_samples // 100))
+        result = profile_implementation(
+            X, errors, min_sup=max(10, n_samples // 100)
+        )
 
         if result["success"]:
             print(f"Done ({result['time_seconds']:.2f}s)")
             results.append(
-                {"n_samples": n_samples, "time": result["time_seconds"], "memory": result["peak_memory_mb"]}
+                {
+                    "n_samples": n_samples,
+                    "time": result["time_seconds"],
+                    "memory": result["peak_memory_mb"],
+                }
             )
         else:
             print(f"Failed ({result.get('error')})")
@@ -215,13 +228,19 @@ def run_dataset_size_benchmarks():
                 f"{size_ratio:.0f}x size -> {time_ratio:.1f}x time"
             )
 
+    # Save results to JSON
+    output_file = Path(__file__).parent / "dataset_size_results.json"
+    with open(output_file, "w") as f:
+        json.dump(results, f, indent=2)
+    print(f"\nDetailed results saved to: {output_file}")
+
     return results
 
 
 if __name__ == "__main__":
     try:
-        run_benchmarks()
-        run_dataset_size_benchmarks()
+        run_cardinality_benchmark()
+        run_dataset_size_benchmark()
         sys.exit(0)
     except Exception as e:
         print(f"\nError running benchmarks: {e}", file=sys.stderr)

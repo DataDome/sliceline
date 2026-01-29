@@ -279,7 +279,9 @@ class Slicefinder(BaseEstimator, TransformerMixin):
             ValueError: If array contains 0, which cannot be one-hot encoded.
         """
         if 0 in array:
-            raise ValueError("Modality 0 is not expected to be one-hot encoded.")
+            raise ValueError(
+                "Modality 0 is not expected to be one-hot encoded."
+            )
 
         # Direct CSR construction: 2-3x faster than lil_matrix approach
         n = array.size
@@ -441,7 +443,9 @@ class Slicefinder(BaseEstimator, TransformerMixin):
         )
 
         # working set of active slices (#attr x #slices) and top-k
-        valid_slices_mask = (slice_sizes >= self._min_sup_actual) & (slice_errors > 0)
+        valid_slices_mask = (slice_sizes >= self._min_sup_actual) & (
+            slice_errors > 0
+        )
         attr = np.arange(1, n_col_x_encoded + 1)[valid_slices_mask]
         slice_sizes = slice_sizes[valid_slices_mask]
         slice_errors = slice_errors[valid_slices_mask]
@@ -499,26 +503,19 @@ class Slicefinder(BaseEstimator, TransformerMixin):
             # For level 2, we're looking for pairs with dot product == 0
             # Most pairs will match, so dense is more efficient
             join_dense = join_counts.toarray() == 0
-            join_upper = np.triu(join_dense, 1)
-            rows, cols = np.where(join_upper)
-            return sp.csr_matrix(
-                (np.ones(len(rows), dtype=np.bool_), (rows, cols)),
-                shape=join_counts.shape,
-                dtype=np.bool_,
-            )
         else:
             # For higher levels, most pairs won't match, so sparse is better
             # Use dense conversion for smaller matrices to ensure consistent ordering
             # This matches the original behavior and ensures deterministic results
             join_dense = join_counts.toarray() == level - 2
-            join_upper = np.triu(join_dense, 1)
-            rows, cols = np.where(join_upper)
 
-            return sp.csr_matrix(
-                (np.ones(len(rows), dtype=np.bool_), (rows, cols)),
-                shape=join_counts.shape,
-                dtype=np.bool_,
-            )
+        join_upper = np.triu(join_dense, 1)
+        rows, cols = np.where(join_upper)
+        return sp.csr_matrix(
+            (np.ones(len(rows), dtype=np.bool_), (rows, cols)),
+            shape=join_counts.shape,
+            dtype=np.bool_,
+        )
 
     @staticmethod
     def _combine_slices(
@@ -757,7 +754,8 @@ class Slicefinder(BaseEstimator, TransformerMixin):
                 top_k_statistics
             )
             valid = np.sum(
-                (statistics[:, 3] >= self._min_sup_actual) & (statistics[:, 1] > 0)
+                (statistics[:, 3] >= self._min_sup_actual)
+                & (statistics[:, 1] > 0)
             )
             logger.debug(
                 " -- valid slices after eval: %s/%i" % (valid, slices.shape[0])

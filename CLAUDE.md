@@ -12,26 +12,23 @@ Sliceline is a Python library for fast slice finding for Machine Learning model 
 
 ### Environment Setup
 ```sh
-make init                    # Install dependencies via Poetry
+make init                    # Install dependencies via uv
 pre-commit install --hook-type pre-push  # Install pre-commit hooks
 ```
 
 ### Testing
 ```sh
 make test                    # Run unit tests with coverage (requires 80% coverage minimum)
-poetry run pytest            # Run tests without coverage report
-poetry run pytest tests/test_slicefinder.py::test_experiments  # Run specific test
-poetry run pytest -k "experiment_1"  # Run tests matching pattern
-poetry run pytest tests/test_performance.py -v  # Run performance benchmarks
+uv run pytest                # Run tests without coverage report
+uv run pytest tests/test_slicefinder.py::test_experiments  # Run specific test
+uv run pytest -k "experiment_1"  # Run tests matching pattern
 ```
 
 ### Code Quality
 ```sh
-make lint                    # Run black, isort, and flake8
-poetry run black .           # Format code (line length: 79)
-poetry run isort .           # Sort imports (black profile)
-poetry run flake8            # Check code style
-pre-commit run --all-files   # Run pre-commit checks manually
+uv run ruff check .          # Check code style
+uv run ruff format . --check # Check formatting
+uv run ruff format .         # Apply formatting
 ```
 
 ### Documentation
@@ -41,14 +38,31 @@ make notebook                # Start Jupyter notebook server
 make execute-notebooks       # Execute all notebooks (run before releases)
 ```
 
-### Performance Benchmarking
-```sh
-# Run cardinality benchmarks
-python benchmarks/cardinality_benchmark.py
+### Benchmarking
 
-# Run pytest-benchmark suite
-poetry run pytest tests/test_performance.py -v --benchmark-only
+The project includes two types of benchmarks:
+
+**Standalone benchmark scripts** (in `benchmarks/`):
+```sh
+# Run all benchmarks (cardinality + dataset size scaling)
+python benchmarks/benchmarks.py
+
+# Results are saved to:
+# - benchmarks/benchmark_results.json (cardinality benchmark)
+# - benchmarks/dataset_size_results.json (dataset size benchmark)
 ```
+
+**pytest-benchmark suite** (in `tests/test_performance.py`):
+```sh
+# Run performance regression tests with benchmarks
+uv run pytest tests/test_performance.py -v --benchmark-only
+
+# Run with full output
+uv run pytest tests/test_performance.py -v
+```
+
+The standalone benchmarks are for profiling and manual performance analysis.
+The pytest-benchmark suite is for regression testing to detect performance regressions.
 
 ## Architecture
 
@@ -104,11 +118,12 @@ Custom validation overriding sklearn's `check_array` to **accept string/object d
 
 ### Benchmarking (benchmarks/)
 
-- `cardinality_benchmark.py`: Profiling script comparing performance across cardinality levels
-  - Tests cardinality levels: 10, 100, 1K, 10K unique values
+- `benchmarks.py`: Profiling script for performance testing
+  - Cardinality benchmark: Tests cardinality levels 10, 100, 500, 1000
+  - Dataset size benchmark: Tests scaling with 1K to 50K samples
   - Measures time, memory, and improvement metrics
-  - Outputs `benchmark_results.json` with detailed metrics
-  - Run with: `python benchmarks/cardinality_benchmark.py`
+  - Outputs `benchmark_results.json` and `dataset_size_results.json`
+  - Run with: `python benchmarks/benchmarks.py`
 
 ## Development Guidelines
 
