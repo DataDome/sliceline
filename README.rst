@@ -68,14 +68,6 @@ Or, through SSH:
 ⚡ Optional Performance Enhancements
 -------------------------------------
 
-Sliceline includes several performance optimizations that provide significant speedups:
-
-**Built-in Optimizations** (Already Included)
-
-- **Sparse-preserving operations**: 10x memory reduction for large slice counts
-- **Direct CSR construction**: 2-3x faster sparse matrix creation
-- All optimizations are automatically enabled with no configuration needed
-
 **Optional: Numba JIT Compilation** (5-50x Additional Speedup)
 
 For maximum performance, you can optionally install Numba for JIT-compiled operations:
@@ -92,7 +84,10 @@ For maximum performance, you can optionally install Numba for JIT-compiled opera
    # macOS
    brew install llvm
 
-   # Install Numba
+   # Install sliceline with Numba optimization
+   pip install sliceline[optimized]
+
+   # Or install Numba separately
    pip install numba
 
 Numba provides 5-50x speedup for scoring operations and is completely optional.

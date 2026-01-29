@@ -45,6 +45,9 @@ dev = [
     "Sphinx>=8.0.0",
     "sphinx-rtd-theme>=3.0.0",
 ]
+optimized = [
+    "numba>=0.60.0",
+]
 
 [build-system]
 requires = ["hatchling"]
