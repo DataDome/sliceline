@@ -301,5 +301,94 @@ class TestMemoryEfficiency:
         )
 
 
+class TestNumbaConsistency:
+    """Test numerical consistency between Numba and NumPy implementations."""
+
+    def test_numba_numpy_identical_results(self):
+        """Verify Numba and NumPy implementations produce identical results.
+
+        This test ensures that the Numba-optimized code path produces
+        numerically identical results to the pure NumPy fallback path.
+        """
+        from unittest.mock import patch
+
+        # Create test data with clear error pattern
+        np.random.seed(42)
+        n_samples = 1000
+        X = np.random.randint(1, 5, size=(n_samples, 10))
+
+        # Create slice with high errors (first 500 samples, feature 0 = 1)
+        X[:500, 0] = 1
+        X[500:, 0] = 2
+
+        errors = np.zeros(n_samples)
+        errors[:500] = 1.0
+        errors[500:] = np.random.random(500) * 0.2
+
+        # Fit with Numba (if available)
+        sf_numba = Slicefinder(k=5, max_l=3, min_sup=10, verbose=False)
+        sf_numba.fit(X, errors)
+
+        # Fit without Numba (force NumPy fallback)
+        with patch("sliceline.slicefinder.NUMBA_AVAILABLE", False):
+            sf_numpy = Slicefinder(k=5, max_l=3, min_sup=10, verbose=False)
+            sf_numpy.fit(X, errors)
+
+        # Verify same number of slices found
+        assert len(sf_numba.top_slices_statistics_) == len(
+            sf_numpy.top_slices_statistics_
+        ), "Different number of slices found"
+
+        # Verify identical statistics for each slice
+        for i, (stat_numba, stat_numpy) in enumerate(
+            zip(sf_numba.top_slices_statistics_, sf_numpy.top_slices_statistics_)
+        ):
+            # Check slice scores (must be identical within floating point precision)
+            assert abs(stat_numba["slice_score"] - stat_numpy["slice_score"]) < 1e-10, (
+                f"Slice {i}: score mismatch "
+                f"(Numba={stat_numba['slice_score']}, "
+                f"NumPy={stat_numpy['slice_score']})"
+            )
+
+            # Check slice sizes (must be exact)
+            assert stat_numba["slice_size"] == stat_numpy["slice_size"], (
+                f"Slice {i}: size mismatch "
+                f"(Numba={stat_numba['slice_size']}, "
+                f"NumPy={stat_numpy['slice_size']})"
+            )
+
+            # Check sum of errors (must be identical)
+            assert (
+                abs(stat_numba["sum_slice_error"] - stat_numpy["sum_slice_error"])
+                < 1e-10
+            ), (
+                f"Slice {i}: sum_error mismatch "
+                f"(Numba={stat_numba['sum_slice_error']}, "
+                f"NumPy={stat_numpy['sum_slice_error']})"
+            )
+
+            # Check average error (must be identical)
+            assert (
+                abs(
+                    stat_numba["slice_average_error"]
+                    - stat_numpy["slice_average_error"]
+                )
+                < 1e-10
+            ), (
+                f"Slice {i}: avg_error mismatch "
+                f"(Numba={stat_numba['slice_average_error']}, "
+                f"NumPy={stat_numpy['slice_average_error']})"
+            )
+
+        # Verify transform produces identical results
+        X_trans_numba = sf_numba.transform(X)
+        X_trans_numpy = sf_numpy.transform(X)
+
+        assert X_trans_numba.shape == X_trans_numpy.shape, "Transform shape mismatch"
+        assert np.array_equal(
+            X_trans_numba, X_trans_numpy
+        ), "Transform produces different results"
+
+
 if __name__ == "__main__":
     pytest.main([__file__, "-v", "--benchmark-only"])

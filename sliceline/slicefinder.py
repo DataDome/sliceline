@@ -155,6 +155,17 @@ class Slicefinder(BaseEstimator, TransformerMixin):
         else:
             logger.setLevel(logging.INFO)
 
+        # Warn user once if Numba optimization is not available
+        if not NUMBA_AVAILABLE and verbose:
+            warnings.warn(
+                "Numba JIT optimization not available. "
+                "Install with 'pip install sliceline[optimized]' "
+                "for 5-50x performance improvements on scoring operations. "
+                "See https://github.com/DataDome/sliceline for details.",
+                UserWarning,
+                stacklevel=2,
+            )
+
     def _check_params(self) -> None:
         """Check transformer parameters."""
         if not 0 < self.alpha <= 1:
