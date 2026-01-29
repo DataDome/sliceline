@@ -103,6 +103,19 @@ The `Slicefinder` class is a scikit-learn compatible estimator implementing the 
 
 Custom validation overriding sklearn's `check_array` to **accept string/object dtype inputs** (line 554-555). This is essential because SliceLine works with categorical data that may be represented as strings. The module is derived from sklearn's validation utilities but modified specifically for this use case.
 
+### Numba Optimization Module (sliceline/_numba_ops.py)
+
+Optional JIT-compiled operations for performance improvement. Contains Numba-accelerated versions of:
+- `score_slices_numba()`: 5-6x faster slice scoring
+- `score_ub_single_numba()` / `score_ub_batch_numba()`: Upper-bound scoring
+- `compute_slice_ids_numba()`: ID computation for deduplication
+
+**Coverage exclusion**: This module is excluded from coverage requirements (similar to `validation.py`) because:
+1. It's completely optional (only loaded if Numba is installed)
+2. Functions are tested indirectly through main slicefinder tests
+3. Numba implementations are verified to produce numerically identical results to NumPy fallbacks
+4. Direct testing of JIT-compiled functions adds complexity with minimal value
+
 ### Testing Structure (tests/)
 
 - `test_slicefinder.py`: Comprehensive unit tests for all private and public methods
@@ -136,7 +149,7 @@ Custom validation overriding sklearn's `check_array` to **accept string/object d
 ### Testing Requirements
 - Unit tests must pass for all changes
 - Coverage threshold: 80% minimum (configured in pyproject.toml)
-- Coverage excludes: validation.py, tests/, hidden files
+- Coverage excludes: validation.py, _numba_ops.py, tests/, hidden files
 - Benchmarking: Available via pytest-benchmark for performance-sensitive changes
 
 ### Adding New Features

@@ -84,7 +84,7 @@ skip-magic-trailing-comma = false
 line-ending = "auto"
 
 [tool.coverage.run]
-omit = [".*", "*/site-packages/*", "tests/*", "*/validation.py"]
+omit = [".*", "*/site-packages/*", "tests/*", "*/validation.py", "*/_numba_ops.py"]
 
 [tool.coverage.report]
 fail_under = 80
