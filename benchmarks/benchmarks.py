@@ -15,6 +15,7 @@ Output:
 from __future__ import annotations
 
 import json
+import logging
 import sys
 import time
 import tracemalloc
@@ -24,6 +25,8 @@ from typing import Any
 from unittest.mock import patch
 
 import numpy as np
+
+logger = logging.getLogger(__name__)
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
@@ -272,11 +275,7 @@ def run_benchmarks_without_numba() -> dict[str, Any]:
 
     with patch("sliceline.slicefinder.NUMBA_AVAILABLE", False):
         for size_name, config in DATASET_CONFIGS.items():
-            print(
-                f"  Benchmarking {size_name} dataset without numba...",
-                end=" ",
-                flush=True,
-            )
+            logger.info("Benchmarking %s dataset without numba...", size_name)
             X, errors = generate_synthetic_data(
                 config["n_samples"], config["n_features"]
             )
@@ -290,7 +289,11 @@ def run_benchmarks_without_numba() -> dict[str, Any]:
             results[f"{size_name}_score"] = score_results["_score"]
             results[f"{size_name}_score_ub"] = score_results["_score_ub"]
 
-            print(f"Done ({fit_result['time_ms']:.1f}ms)")
+            logger.info(
+                "Completed %s dataset without numba (%.1fms)",
+                size_name,
+                fit_result["time_ms"],
+            )
 
     return results
 
@@ -306,11 +309,7 @@ def run_benchmarks_with_numba() -> dict[str, Any]:
     results = {}
 
     for size_name, config in DATASET_CONFIGS.items():
-        print(
-            f"  Benchmarking {size_name} dataset with numba...",
-            end=" ",
-            flush=True,
-        )
+        logger.info("Benchmarking %s dataset with numba...", size_name)
         X, errors = generate_synthetic_data(
             config["n_samples"], config["n_features"]
         )
@@ -324,7 +323,11 @@ def run_benchmarks_with_numba() -> dict[str, Any]:
         results[f"{size_name}_score"] = score_results["_score"]
         results[f"{size_name}_score_ub"] = score_results["_score_ub"]
 
-        print(f"Done ({fit_result['time_ms']:.1f}ms)")
+        logger.info(
+            "Completed %s dataset with numba (%.1fms)",
+            size_name,
+            fit_result["time_ms"],
+        )
 
     return results
 
@@ -576,21 +579,18 @@ def main() -> int:
     print()
 
     if not numba_available:
-        print("WARNING: Numba is not installed.")
-        print("Install with: pip install numba")
-        print("Or: pip install sliceline[optimized]")
-        print()
-        print("Running benchmarks without numba only...")
-        print()
+        logger.warning(
+            "Numba is not installed. Install with: pip install numba "
+            "or: pip install sliceline[optimized]"
+        )
+        logger.info("Running benchmarks without numba only...")
 
-    print("Running benchmarks WITHOUT numba optimization...")
+    logger.info("Running benchmarks WITHOUT numba optimization...")
     without_numba_results = run_benchmarks_without_numba()
-    print()
 
     if numba_available:
-        print("Running benchmarks WITH numba optimization...")
+        logger.info("Running benchmarks WITH numba optimization...")
         with_numba_results = run_benchmarks_with_numba()
-        print()
 
         speedups = calculate_speedups(
             without_numba_results, with_numba_results
@@ -617,17 +617,25 @@ def main() -> int:
     with open(output_file, "w") as f:
         json.dump(results, f, indent=2)
 
+    logger.info("Results saved to: %s", output_file)
     print(f"\nResults saved to: {output_file}")
 
     return 0
 
 
+def _configure_logging() -> None:
+    """Configure logging for the benchmark script."""
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+        datefmt="%Y-%m-%d %H:%M:%S",
+    )
+
+
 if __name__ == "__main__":
+    _configure_logging()
     try:
         sys.exit(main())
     except Exception as e:
-        print(f"\nError running benchmarks: {e}", file=sys.stderr)
-        import traceback
-
-        traceback.print_exc()
+        logger.exception("Error running benchmarks: %s", e)
         sys.exit(1)
