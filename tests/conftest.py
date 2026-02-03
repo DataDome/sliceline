@@ -201,7 +201,7 @@ def experiments():
     ).T
     errors_3 = np.array([1] * n + [0] * n)
     expected_top_slices_3 = np.array(
-        [[1.0, 1.0, None], [1.0, None, None], [None, 1.0, None]]
+        [[1, 1, None], [None, 1, None], [1, None, None]]
     )
     expected_top_slices_statistics_3 = [
         {
@@ -246,8 +246,8 @@ def experiments():
     errors_4 = np.array([1] * n + [0] * n)
     expected_top_slices_4 = np.array(
         [
-            [1.0, 1.0, None, None, None, None],
-            [1.0, None, 3.0, None, None, None],
+            [1, 1, None, None, None, None],
+            [1, None, 3, None, None, None],
         ]
     )
     expected_top_slices_statistics_4 = [
@@ -273,8 +273,8 @@ def experiments():
     # Experiment 5: Experiment 4 w/ min_sup=50
     expected_top_slices_5 = np.array(
         [
-            [1.0, 1.0, None, None, None, None],
-            [1.0, None, 3.0, None, None, None],
+            [1, 1, None, None, None, None],
+            [1, None, 3, None, None, None],
         ]
     )
     expected_top_slices_statistics_5 = [
@@ -304,10 +304,11 @@ def experiments():
     # Experiment 6: Experiment 4 w/ max_l=1
     expected_top_slices_6 = np.array(
         [
-            [1.0, None, None, None, None, None],
-            [None, 1.0, None, None, None, None],
+            [None, 1, None, None, None, None],
+            [1, None, None, None, None, None],
         ]
     )
+    # Statistics have same values for both slices (both have equal scores)
     expected_top_slices_statistics_6 = [
         {
             "slice_score": 0.29999999999999993,
@@ -335,9 +336,9 @@ def experiments():
     # Experiment 7: Experiment 4 w/ alpha=0.7
     expected_top_slices_7 = np.array(
         [
-            [1.0, 1.0, None, None, None, None],
-            [1.0, None, None, None, None, None],
-            [None, 1.0, None, None, None, None],
+            [1, 1, None, None, None, None],
+            [None, 1, None, None, None, None],
+            [1, None, None, None, None, None],
         ]
     )
     expected_top_slices_statistics_7 = [
@@ -374,10 +375,10 @@ def experiments():
     # Experiment 8: Experiment 4 w/ k=3
     expected_top_slices_8 = np.array(
         [
-            [1.0, 1.0, None, None, None, None],
-            [1.0, None, 3.0, None, None, None],
-            [1.0, None, None, None, None, None],
-            [None, 1.0, None, None, None, None],
+            [1, 1, None, None, None, None],
+            [1, None, 3, None, None, None],
+            [None, 1, None, None, None, None],
+            [1, None, None, None, None, None],
         ]
     )
     expected_top_slices_statistics_8 = [
@@ -429,7 +430,7 @@ def experiments():
         )
         / 100
     )
-    expected_top_slices_9 = np.array([[2.0, None, None], [2.0, 1.0, None]])
+    expected_top_slices_9 = np.array([[2, None, None], [2, 1, None]])
     expected_top_slices_statistics_9 = [
         {
             "slice_score": 0.3610508757297748,
@@ -466,9 +467,9 @@ def experiments():
     errors_10 = np.array([1] * n + [0] * n)
     expected_top_slices_10 = np.array(
         [
-            [1.0, 1.0, None, None, None, None],
-            [1.0, None, None, None, None, None],
-            [None, 1.0, None, None, None, None],
+            [1, 1, None, None, None, None],
+            [None, 1, None, None, None, None],
+            [1, None, None, None, None, None],
         ]
     )
     expected_top_slices_statistics_10 = [
@@ -513,8 +514,8 @@ def experiments():
     errors_11 = np.array([1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0])
     expected_top_slices_11 = np.array(
         [
-            [1.0, 1.0, 1.0, None],
-            [None, 1.0, 1.0, None],
+            [1, 1, 1, None],
+            [None, 1, 1, None],
             [1, None, 1, None],
             [1, 1, None, None],
         ]
@@ -662,8 +663,8 @@ def experiments():
     # Experiment 14: Experiment 4 w/ min_sup=10
     expected_top_slices_14 = np.array(
         [
-            [1.0, 1.0, None, None, None, None],
-            [1.0, None, 3.0, None, None, None],
+            [1, 1, None, None, None, None],
+            [1, None, 3, None, None, None],
         ]
     )
     expected_top_slices_statistics_14 = [
@@ -791,9 +792,9 @@ def experiments():
     # Experiment 17: Experiment 4 w/ min_sup=0.1
     expected_top_slices_17 = np.array(
         [
-            [1.0, 1.0, None, None, None, None],
-            [1.0, None, None, None, None, None],
-            [None, 1.0, None, None, None, None],
+            [1, 1, None, None, None, None],
+            [None, 1, None, None, None, None],
+            [1, None, None, None, None, None],
         ]
     )
     expected_top_slices_statistics_17 = [
