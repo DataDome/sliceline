@@ -19,8 +19,11 @@ from contextlib import suppress
 import numpy as np
 import scipy.sparse as sp
 
-# mypy error: Module 'numpy.core.numeric' has no attribute 'ComplexWarning'
-from numpy.core.numeric import ComplexWarning  # type: ignore
+# ComplexWarning moved from numpy.core.numeric to numpy.exceptions in NumPy 2.0
+try:
+    from numpy.exceptions import ComplexWarning
+except ImportError:
+    from numpy.core.numeric import ComplexWarning  # type: ignore
 from sklearn._config import get_config as _get_config
 from sklearn.exceptions import DataConversionWarning
 from sklearn.utils.fixes import _object_dtype_isnan

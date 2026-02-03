@@ -1,22 +1,25 @@
 init:
 	python3 -m pip install --upgrade pip
-	pip3 install poetry
-	poetry install
+	pip3 install uv
+	uv sync --all-extras
 
 lint:
-	poetry run black .
-	poetry run isort .
-	poetry run flake8
+	uv run ruff check . --fix
+	uv run ruff format .
+
+check:
+	uv run ruff check .
+	uv run ruff format --check .
 
 test:
-	poetry run coverage run -m pytest
-	poetry run coverage report -m
+	uv run coverage run -m pytest
+	uv run coverage report -m
 
 doc:
-	sphinx-build -a docs/source docs/build
+	uv run sphinx-build -a docs/source docs/build
 
 notebook:
-	poetry run jupyter notebook
+	uv run jupyter notebook
 
 execute-notebooks:
-	poetry run jupyter nbconvert --execute --to notebook --inplace notebooks/*.ipynb --ExecutePreprocessor.timeout=-1
+	uv run jupyter nbconvert --execute --to notebook --inplace notebooks/*.ipynb --ExecutePreprocessor.timeout=600

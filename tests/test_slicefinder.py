@@ -509,3 +509,121 @@ def test_get_slice_with_nan(benchmark, basic_test_data):
     assert np.array_equal(
         computed_slice_nan_case, expected_slice_nan_case, equal_nan=True
     )
+
+
+class TestParameterValidation:
+    """Test parameter validation in Slicefinder."""
+
+    def test_invalid_alpha_zero(self, basic_test_data):
+        """Test that alpha=0 raises ValueError."""
+        model = slicefinder.Slicefinder(alpha=0)
+        with pytest.raises(ValueError, match="Invalid 'alpha' parameter"):
+            model.fit(basic_test_data["X"], basic_test_data["errors"])
+
+    def test_invalid_alpha_negative(self, basic_test_data):
+        """Test that negative alpha raises ValueError."""
+        model = slicefinder.Slicefinder(alpha=-0.5)
+        with pytest.raises(ValueError, match="Invalid 'alpha' parameter"):
+            model.fit(basic_test_data["X"], basic_test_data["errors"])
+
+    def test_invalid_alpha_greater_than_one(self, basic_test_data):
+        """Test that alpha > 1 raises ValueError."""
+        model = slicefinder.Slicefinder(alpha=1.5)
+        with pytest.raises(ValueError, match="Invalid 'alpha' parameter"):
+            model.fit(basic_test_data["X"], basic_test_data["errors"])
+
+    def test_valid_alpha_one(self, basic_test_data):
+        """Test that alpha=1 is valid."""
+        model = slicefinder.Slicefinder(alpha=1.0)
+        model.fit(basic_test_data["X"], basic_test_data["errors"])
+        assert model.top_slices_ is not None
+
+    def test_invalid_k_zero(self, basic_test_data):
+        """Test that k=0 raises ValueError."""
+        model = slicefinder.Slicefinder(k=0)
+        with pytest.raises(ValueError, match="Invalid 'k' parameter"):
+            model.fit(basic_test_data["X"], basic_test_data["errors"])
+
+    def test_invalid_k_negative(self, basic_test_data):
+        """Test that negative k raises ValueError."""
+        model = slicefinder.Slicefinder(k=-1)
+        with pytest.raises(ValueError, match="Invalid 'k' parameter"):
+            model.fit(basic_test_data["X"], basic_test_data["errors"])
+
+    def test_invalid_max_l_zero(self, basic_test_data):
+        """Test that max_l=0 raises ValueError."""
+        model = slicefinder.Slicefinder(max_l=0)
+        with pytest.raises(ValueError, match="Invalid 'max_l' parameter"):
+            model.fit(basic_test_data["X"], basic_test_data["errors"])
+
+    def test_invalid_max_l_negative(self, basic_test_data):
+        """Test that negative max_l raises ValueError."""
+        model = slicefinder.Slicefinder(max_l=-1)
+        with pytest.raises(ValueError, match="Invalid 'max_l' parameter"):
+            model.fit(basic_test_data["X"], basic_test_data["errors"])
+
+    def test_invalid_min_sup_negative(self, basic_test_data):
+        """Test that negative min_sup raises ValueError."""
+        model = slicefinder.Slicefinder(min_sup=-1)
+        with pytest.raises(ValueError, match="Invalid 'min_sup' parameter"):
+            model.fit(basic_test_data["X"], basic_test_data["errors"])
+
+    def test_invalid_min_sup_float_one(self, basic_test_data):
+        """Test that min_sup=1.0 (float) raises ValueError."""
+        model = slicefinder.Slicefinder(min_sup=1.0)
+        with pytest.raises(ValueError, match="Invalid 'min_sup' parameter"):
+            model.fit(basic_test_data["X"], basic_test_data["errors"])
+
+    def test_invalid_min_sup_float_greater_than_one(self, basic_test_data):
+        """Test that min_sup > 1.0 (float) raises ValueError."""
+        model = slicefinder.Slicefinder(min_sup=1.5)
+        with pytest.raises(ValueError, match="Invalid 'min_sup' parameter"):
+            model.fit(basic_test_data["X"], basic_test_data["errors"])
+
+    def test_valid_min_sup_fraction(self, basic_test_data):
+        """Test that min_sup as fraction (0 < min_sup < 1) is valid."""
+        model = slicefinder.Slicefinder(min_sup=0.5)
+        model.fit(basic_test_data["X"], basic_test_data["errors"])
+        assert model.top_slices_ is not None
+
+    def test_valid_min_sup_integer(self, basic_test_data):
+        """Test that min_sup as integer is valid."""
+        model = slicefinder.Slicefinder(min_sup=2)
+        model.fit(basic_test_data["X"], basic_test_data["errors"])
+        assert model.top_slices_ is not None
+
+
+class TestMinSupMutation:
+    """Test that min_sup parameter is not mutated across multiple fit calls."""
+
+    def test_min_sup_not_mutated_with_fraction(self, basic_test_data):
+        """Test that min_sup is preserved when using fractional value."""
+        original_min_sup = 0.5
+        model = slicefinder.Slicefinder(min_sup=original_min_sup)
+
+        model.fit(basic_test_data["X"], basic_test_data["errors"])
+        assert model.min_sup == original_min_sup
+
+        model.fit(basic_test_data["X"], basic_test_data["errors"])
+        assert model.min_sup == original_min_sup
+
+    def test_min_sup_not_mutated_with_integer(self, basic_test_data):
+        """Test that min_sup is preserved when using integer value."""
+        original_min_sup = 2
+        model = slicefinder.Slicefinder(min_sup=original_min_sup)
+
+        model.fit(basic_test_data["X"], basic_test_data["errors"])
+        assert model.min_sup == original_min_sup
+
+        model.fit(basic_test_data["X"], basic_test_data["errors"])
+        assert model.min_sup == original_min_sup
+
+
+class TestDummifyValidation:
+    """Test _dummify method validation."""
+
+    def test_dummify_raises_on_zero_modality(self, basic_test_data):
+        """Test that _dummify raises ValueError when array contains 0."""
+        array_with_zero = np.array([0, 1, 2, 3])
+        with pytest.raises(ValueError, match="Modality 0 is not expected"):
+            basic_test_data["slicefinder_model"]._dummify(array_with_zero, 10)

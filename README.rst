@@ -65,6 +65,47 @@ Or, through SSH:
 
    pip install git+ssh://git@github.com/datadome/sliceline.git --upgrade
 
+⚡ Performance Optimization
+---------------------------
+
+Sliceline includes optional Numba JIT compilation for **5-50x performance improvements** on scoring operations.
+
+**Quick Installation:**
+
+.. code:: sh
+
+   # With optimization support
+   pip install sliceline[optimized]
+
+**Benefits:**
+
+- 5-6x faster scoring operations
+- 1.4-4.5x faster overall fit() performance
+- Up to 17% memory reduction on large datasets
+- Automatic fallback to pure NumPy if Numba not available
+
+**System Requirements:**
+
+Numba requires LLVM to be installed:
+
+.. code:: sh
+
+   # macOS
+   brew install llvm
+
+   # Linux (Ubuntu/Debian)
+   sudo apt-get install llvm
+
+**Verify Optimization:**
+
+.. code:: python
+
+   from sliceline import is_numba_available
+
+   print("Numba available:", is_numba_available())
+
+See the `performance benchmarks <https://github.com/DataDome/sliceline/tree/main/benchmarks>`__ for detailed metrics.
+
 🔗 Useful links
 ---------------
 

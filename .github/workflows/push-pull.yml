@@ -8,18 +8,31 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    timeout-minutes: 45
     strategy:
+      fail-fast: false
       matrix:
-        python-version: ["3.10", "3.11", "3.12", "3.13"]
+        python-version: ["3.10", "3.11", "3.12"]
+        numba: [true, false]
+    name: Python ${{ matrix.python-version }} (Numba=${{ matrix.numba }})
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
+      - name: Install LLVM for Numba optimization
+        if: matrix.numba
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y llvm-14
       - name: Install dependencies
         run: make init
+      - name: Verify Numba availability
+        run: |
+          uv run python -c "from sliceline import is_numba_available; print(f'Numba available: {is_numba_available()}')"
       - name: Run test
         run: make test
-      - name: Run notebooks
+      - name: Run notebooks (with Numba optimization)
+        if: matrix.numba
         run: make execute-notebooks
