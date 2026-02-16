@@ -70,11 +70,11 @@ The optimization is fully optional and backward-compatible:
    try:
        from sliceline._numba_ops import score_slices_numba
        NUMBA_AVAILABLE = True
-   except ImportError:
+   except (ImportError, RuntimeError):
        NUMBA_AVAILABLE = False
    ```
 
-3. **Graceful fallback**: If Numba is not installed, Slicefinder automatically uses pure NumPy implementations with identical results.
+3. **Graceful fallback**: If Numba is not installed or fails to initialize (e.g., read-only filesystem), Slicefinder automatically uses pure NumPy implementations with identical results.
 
 ### JIT Compilation Details
 
@@ -105,6 +105,38 @@ python benchmarks/benchmarks.py
 - Small datasets (<1K samples) where overhead might dominate
 - One-time exploratory analysis
 - Environments where LLVM cannot be installed
+
+## Disabling Numba
+
+### Environment Variable
+
+To explicitly disable Numba JIT compilation (e.g., for debugging or in restricted environments):
+
+```bash
+export NUMBA_DISABLE_JIT=1
+```
+
+### Docker / Read-only Filesystems
+
+Numba uses `@njit(cache=True)` which requires a writable directory to store compiled function caches. In Docker containers or read-only filesystems, this can fail with:
+
+```
+RuntimeError: cannot cache function 'score_slices_numba': no locator available
+```
+
+**Solutions:**
+
+1. **Set a writable cache directory** (recommended if you want Numba acceleration):
+   ```dockerfile
+   ENV NUMBA_CACHE_DIR=/tmp/numba_cache
+   ```
+
+2. **Disable Numba entirely:**
+   ```dockerfile
+   ENV NUMBA_DISABLE_JIT=1
+   ```
+
+3. **Do nothing**: Sliceline automatically catches the `RuntimeError` and falls back to pure NumPy.
 
 ## Troubleshooting
 
