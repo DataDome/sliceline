@@ -620,35 +620,7 @@ class TestMinSupMutation:
 
 
 class TestNumbaFallback:
-    """Test that numba import errors are handled gracefully."""
-
-    def test_runtime_error_is_caught_by_numba_detection(self):
-        """Test that RuntimeError is caught during numba import.
-
-        Reproduces the production issue where numba is installed but
-        fails at runtime (e.g., read-only filesystem preventing Numba
-        cache creation raises RuntimeError, not ImportError).
-        """
-        numba_available = True
-        try:
-            raise RuntimeError(
-                "cannot cache function 'score_slices_numba': "
-                "no locator available"
-            )
-        except (ImportError, RuntimeError):
-            numba_available = False
-
-        assert numba_available is False
-
-    def test_import_error_is_caught_by_numba_detection(self):
-        """Test that ImportError is caught during numba import."""
-        numba_available = True
-        try:
-            raise ImportError("No module named 'sliceline._numba_ops'")
-        except (ImportError, RuntimeError):
-            numba_available = False
-
-        assert numba_available is False
+    """Test that Slicefinder works correctly without Numba."""
 
     def test_slicefinder_works_without_numba(self):
         """Test that Slicefinder works correctly when NUMBA_AVAILABLE is False."""
