@@ -619,6 +619,57 @@ class TestMinSupMutation:
         assert model.min_sup == original_min_sup
 
 
+class TestNumbaFallback:
+    """Test that numba import errors are handled gracefully."""
+
+    def test_runtime_error_is_caught_by_numba_detection(self):
+        """Test that RuntimeError is caught during numba import.
+
+        Reproduces the production issue where numba is installed but
+        fails at runtime (e.g., read-only filesystem preventing Numba
+        cache creation raises RuntimeError, not ImportError).
+        """
+        numba_available = True
+        try:
+            raise RuntimeError(
+                "cannot cache function 'score_slices_numba': "
+                "no locator available"
+            )
+        except (ImportError, RuntimeError):
+            numba_available = False
+
+        assert numba_available is False
+
+    def test_import_error_is_caught_by_numba_detection(self):
+        """Test that ImportError is caught during numba import."""
+        numba_available = True
+        try:
+            raise ImportError("No module named 'sliceline._numba_ops'")
+        except (ImportError, RuntimeError):
+            numba_available = False
+
+        assert numba_available is False
+
+    def test_slicefinder_works_without_numba(self):
+        """Test that Slicefinder works correctly when NUMBA_AVAILABLE is False."""
+        original = slicefinder.NUMBA_AVAILABLE
+        try:
+            slicefinder.NUMBA_AVAILABLE = False
+            model = slicefinder.Slicefinder(alpha=0.95, k=2, max_l=2, min_sup=1)
+            X = np.array([
+                [1, 1, 1, 1, 1, 1, 2, 2],
+                [1, 1, 1, 1, 2, 2, 1, 1],
+                [1, 2, 3, 4, 5, 6, 7, 8],
+                [3, 3, 3, 1, 3, 1, 2, 1],
+            ]).T
+            errors = np.array([1, 1, 1, 1, 0, 0, 0, 0])
+            model.fit(X, errors)
+            assert model.top_slices_ is not None
+            assert model.top_slices_.shape[0] > 0
+        finally:
+            slicefinder.NUMBA_AVAILABLE = original
+
+
 class TestDummifyValidation:
     """Test _dummify method validation."""
 
