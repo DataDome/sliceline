@@ -96,6 +96,25 @@ Numba requires LLVM to be installed:
    # Linux (Ubuntu/Debian)
    sudo apt-get install llvm
 
+**Disabling Numba:**
+
+If you need to disable Numba JIT (e.g., in restricted environments), set the environment variable:
+
+.. code:: sh
+
+   export NUMBA_DISABLE_JIT=1
+
+**Docker / Read-only Filesystems:**
+
+Numba requires a writable cache directory. In Docker containers or read-only filesystems,
+set ``NUMBA_CACHE_DIR`` to a writable path:
+
+.. code:: dockerfile
+
+   ENV NUMBA_CACHE_DIR=/tmp/numba_cache
+
+If the cache directory is not writable, Sliceline will automatically fall back to pure NumPy.
+
 **Verify Optimization:**
 
 .. code:: python

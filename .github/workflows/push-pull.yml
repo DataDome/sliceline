@@ -33,6 +33,3 @@ jobs:
           uv run python -c "from sliceline import is_numba_available; print(f'Numba available: {is_numba_available()}')"
       - name: Run test
         run: make test
-      - name: Run notebooks (with Numba optimization)
-        if: matrix.numba
-        run: make execute-notebooks

@@ -32,7 +32,7 @@ try:
     )
 
     NUMBA_AVAILABLE = True
-except ImportError:
+except (ImportError, RuntimeError):
     NUMBA_AVAILABLE = False
     score_slices_numba = None
     score_ub_batch_numba = None
