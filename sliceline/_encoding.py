@@ -21,7 +21,9 @@ class CappedOneHotEncoder:
 
     Wraps sklearn's OneHotEncoder but:
     1. Prunes rare categories, keeping only the top-max_cardinality
-       most frequent values per feature (rare values become unknown).
+       most frequent values per feature. Samples with rare values
+       get a zero vector for that feature — they won't match any
+       slice predicate on it (they are not dropped from the dataset).
     2. Returns sparse matrices in bool dtype (1 byte per nnz instead
        of 8 bytes for float64), reducing memory by ~8x on values.
 
