@@ -106,10 +106,10 @@ class Slicefinder(BaseEstimator, TransformerMixin):
     max_cardinality: int or None, default=None
         Maximum categories per feature. When set, only the
         top-max_cardinality most frequent values per feature are
-        kept. Samples with rare values get a zero vector for that
-        feature (they won't match any slice predicate on it).
-        Reduces memory for high-cardinality features. None means
-        no cap (all values kept).
+        kept. All rare values are grouped into a shared "other"
+        category per feature, so they can still form a slice
+        predicate. Reduces memory for high-cardinality features.
+        None means no cap (all values kept).
 
     verbose: bool, default=True
         Controls the verbosity.

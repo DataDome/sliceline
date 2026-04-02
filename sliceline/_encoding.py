@@ -21,9 +21,9 @@ class CappedOneHotEncoder:
 
     Wraps sklearn's OneHotEncoder but:
     1. Prunes rare categories, keeping only the top-max_cardinality
-       most frequent values per feature. Samples with rare values
-       get a zero vector for that feature — they won't match any
-       slice predicate on it (they are not dropped from the dataset).
+       most frequent values per feature. All rare values are grouped
+       into a shared "other" column per feature, so they can still
+       form a slice predicate (e.g., "feature has a rare value").
     2. Returns sparse matrices in bool dtype (1 byte per nnz instead
        of 8 bytes for float64), reducing memory by ~8x on values.
 
@@ -66,11 +66,18 @@ class CappedOneHotEncoder:
         return self._encoder.inverse_transform(encoded)
 
     def _prune_rare(self, X: NDArray, fit: bool) -> NDArray:
-        """Replace rare category values with sentinel -999."""
+        """Replace rare category values with a per-feature sentinel.
+
+        Rare values are mapped to a sentinel value that is guaranteed
+        to not collide with any real value in the column. The OHE
+        learns it as a real category during fit, grouping all rare
+        values into a single "other" column per feature.
+        """
         X_pruned = X.copy()
 
         if fit:
             self._value_maps = []
+            self._sentinels = []
 
         for f in range(X.shape[1]):
             if fit:
@@ -81,8 +88,28 @@ class CappedOneHotEncoder:
                 else:
                     self._value_maps.append(unique_vals)
 
+                # Pick a sentinel distinct from all real values
+                self._sentinels.append(self._make_sentinel(unique_vals))
+
             kept_set = set(self._value_maps[f])
             mask = np.array([v not in kept_set for v in X_pruned[:, f]])
-            X_pruned[mask, f] = -999
+            X_pruned[mask, f] = self._sentinels[f]
 
         return X_pruned
+
+    @staticmethod
+    def _make_sentinel(unique_vals: NDArray):
+        """Return a value guaranteed absent from unique_vals.
+
+        Adapts to the column dtype:
+        - numeric: min(values) - 1
+        - string/object: "__OTHER__" (with suffix if collision)
+        """
+        if unique_vals.dtype.kind in ("i", "u", "f"):
+            return int(np.min(unique_vals)) - 1
+
+        sentinel = "__OTHER__"
+        existing = set(unique_vals)
+        while sentinel in existing:
+            sentinel += "_"
+        return sentinel
