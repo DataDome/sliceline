@@ -789,7 +789,9 @@ class Slicefinder(BaseEstimator, TransformerMixin):
                 max_cardinality=self.max_cardinality
             )
         else:
-            self._one_hot_encoder = OneHotEncoder(handle_unknown="ignore")
+            self._one_hot_encoder = OneHotEncoder(
+                handle_unknown="ignore", dtype=np.int8
+            )
         x_encoded = self._one_hot_encoder.fit_transform(input_x)
         feature_domains: NDArray = np.array(
             [len(sub_array) for sub_array in self._one_hot_encoder.categories_]

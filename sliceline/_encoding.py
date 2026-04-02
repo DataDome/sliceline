@@ -24,8 +24,10 @@ class CappedOneHotEncoder:
        most frequent values per feature. All rare values are grouped
        into a shared "other" column per feature, so they can still
        form a slice predicate (e.g., "feature has a rare value").
-    2. Returns sparse matrices in bool dtype (1 byte per nnz instead
+    2. Returns sparse matrices in int8 dtype (1 byte per nnz instead
        of 8 bytes for float64), reducing memory by ~8x on values.
+       Uses int8 instead of bool to preserve numeric sparse matrix
+       semantics (sum, matmul) without dtype surprises.
 
     Parameters
     ----------
@@ -35,7 +37,7 @@ class CappedOneHotEncoder:
 
     def __init__(self, max_cardinality: int | None = None) -> None:
         self.max_cardinality = max_cardinality
-        self._encoder = OneHotEncoder(handle_unknown="ignore", dtype=np.bool_)
+        self._encoder = OneHotEncoder(handle_unknown="ignore", dtype=np.int8)
         self._value_maps: list[NDArray] | None = None
 
     def fit(self, X: NDArray) -> CappedOneHotEncoder:

@@ -24,20 +24,20 @@ class TestCappedOneHotEncoder:
             X
         ).shape[1]
 
-    def test_bool_dtype(self):
+    def test_int8_dtype(self):
         X = np.array([[1, 2], [3, 4]])
         enc = CappedOneHotEncoder()
-        assert enc.fit_transform(X).dtype == np.bool_
+        assert enc.fit_transform(X).dtype == np.int8
 
-    def test_bool_smaller_than_float(self):
+    def test_int8_smaller_than_float(self):
         rng = np.random.default_rng(42)
         X = rng.integers(1, 20, size=(5000, 10))
         enc = CappedOneHotEncoder()
-        result_bool = enc.fit_transform(X)
+        result_int8 = enc.fit_transform(X)
         from sklearn.preprocessing import OneHotEncoder
 
         result_float = OneHotEncoder(handle_unknown="ignore").fit_transform(X)
-        assert result_bool.data.nbytes < result_float.data.nbytes
+        assert result_int8.data.nbytes < result_float.data.nbytes
 
     def test_inverse_transform(self):
         X = np.array([[1, 2], [3, 4], [1, 4]])
