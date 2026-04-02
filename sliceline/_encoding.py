@@ -91,8 +91,7 @@ class CappedOneHotEncoder:
                 # Pick a sentinel distinct from all real values
                 self._sentinels.append(self._make_sentinel(unique_vals))
 
-            kept_set = set(self._value_maps[f])
-            mask = np.array([v not in kept_set for v in X_pruned[:, f]])
+            mask = ~np.isin(X_pruned[:, f], self._value_maps[f])
             X_pruned[mask, f] = self._sentinels[f]
 
         return X_pruned
