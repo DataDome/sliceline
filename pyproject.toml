@@ -1,6 +1,6 @@
 [project]
 name = "sliceline"
-version = "0.3.1"
+version = "0.3.2"
 description = "Fast slice finding for Machine Learning model debugging."
 readme = "README.rst"
 license = "BSD-3-Clause"

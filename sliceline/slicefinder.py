@@ -103,6 +103,14 @@ class Slicefinder(BaseEstimator, TransformerMixin):
         it ensures statistical significance. If `min_sup` is a float (0 < `min_sup` < 1),
         it represents the faction of the input dataset (`X`).
 
+    max_cardinality: int or None, default=None
+        Maximum categories per feature. When set, only the
+        top-max_cardinality most frequent values per feature are
+        kept. All rare values are grouped into a shared "other"
+        category per feature, so they can still form a slice
+        predicate. Reduces memory for high-cardinality features.
+        None means no cap (all values kept).
+
     verbose: bool, default=True
         Controls the verbosity.
 
@@ -137,12 +145,14 @@ class Slicefinder(BaseEstimator, TransformerMixin):
         k: int = 1,
         max_l: int = 4,
         min_sup: int | float = 10,
+        max_cardinality: int | None = None,
         verbose: bool = True,
     ) -> None:
         self.alpha = alpha
         self.k = k
         self.max_l = max_l
         self.min_sup = min_sup
+        self.max_cardinality = max_cardinality
         self.verbose = verbose
 
         self._one_hot_encoder = self._top_slices_enc = None
@@ -772,7 +782,16 @@ class Slicefinder(BaseEstimator, TransformerMixin):
     ) -> None:
         """Main function of the SliceLine algorithm."""
         # prepare offset vectors and one-hot encoded input_x
-        self._one_hot_encoder = OneHotEncoder(handle_unknown="ignore")
+        if self.max_cardinality is not None:
+            from sliceline._encoding import CappedOneHotEncoder
+
+            self._one_hot_encoder = CappedOneHotEncoder(
+                max_cardinality=self.max_cardinality
+            )
+        else:
+            self._one_hot_encoder = OneHotEncoder(
+                handle_unknown="ignore", dtype=np.int8
+            )
         x_encoded = self._one_hot_encoder.fit_transform(input_x)
         feature_domains: NDArray = np.array(
             [len(sub_array) for sub_array in self._one_hot_encoder.categories_]
