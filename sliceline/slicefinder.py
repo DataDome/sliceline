@@ -378,9 +378,12 @@ class Slicefinder(BaseEstimator, TransformerMixin):
             # Sort by score (descending), then lexicographically by slice representation
             # to ensure deterministic ordering when scores are equal
             scores = -top_k_statistics[:, 0]
+            # Densify once: a dense copy per column would keep
+            # n_slices * n_columns**2 bytes alive in `slice_keys`
+            dense_top_k_slices = top_k_slices.toarray()
             slice_keys = tuple(
-                top_k_slices.toarray()[:, i]
-                for i in range(top_k_slices.shape[1])
+                dense_top_k_slices[:, i]
+                for i in range(dense_top_k_slices.shape[1])
             )
             top_slices_indices = np.lexsort(slice_keys[::-1] + (scores,))
             top_k_slices, top_k_statistics = (
