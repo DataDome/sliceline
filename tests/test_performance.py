@@ -14,6 +14,8 @@ It differs from benchmarks/benchmarks.py in purpose:
 Run with: uv run pytest tests/test_performance.py -v --benchmark-only
 """
 
+import tracemalloc
+
 import numpy as np
 import pytest
 from scipy import sparse as sp
@@ -297,6 +299,39 @@ class TestMemoryEfficiency:
         )
         assert actual_memory < expected_max_memory, (
             f"Sparse matrix using {actual_memory} bytes, "
+            f"expected < {expected_max_memory} bytes"
+        )
+
+    def test_maintain_top_k_memory(self):
+        """Verify _maintain_top_k densifies the top-k slices only once."""
+        n_slices = 100
+        n_col = 1000
+        slices = sp.random(
+            n_slices, n_col, density=0.002, format="csr", dtype=bool
+        )
+        # Equal scores: every slice ties with the k-th one and stays in top-k
+        statistics = np.tile([1.0, 50.0, 1.0, 50.0], (n_slices, 1))
+        sf = Slicefinder(k=1, min_sup=1, verbose=False)
+
+        tracemalloc.start()
+        try:
+            top_k_slices, _ = sf._maintain_top_k(
+                slices,
+                statistics,
+                sp.csr_matrix((0, n_col), dtype=bool),
+                np.zeros((0, 4)),
+            )
+            _, peak_memory = tracemalloc.get_traced_memory()
+        finally:
+            tracemalloc.stop()
+
+        assert top_k_slices.shape[0] == n_slices
+
+        # Memory should be proportional to n_slices * n_col (~3MB with the
+        # np.lexsort buffers)
+        expected_max_memory = 20_000_000  # 20MB
+        assert peak_memory < expected_max_memory, (
+            f"_maintain_top_k peak memory is {peak_memory} bytes, "
             f"expected < {expected_max_memory} bytes"
         )
 

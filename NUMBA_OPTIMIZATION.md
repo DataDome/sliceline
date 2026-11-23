@@ -8,17 +8,7 @@ This document describes the Numba JIT optimization implementation in Sliceline, 
 
 ### Installation
 
-Numba requires LLVM to be installed on your system:
-
-**macOS:**
 ```bash
-brew install llvm
-pip install sliceline[optimized]
-```
-
-**Linux (Ubuntu/Debian):**
-```bash
-sudo apt-get install llvm
 pip install sliceline[optimized]
 ```
 
@@ -104,7 +94,6 @@ python benchmarks/benchmarks.py
 **Not needed for:**
 - Small datasets (<1K samples) where overhead might dominate
 - One-time exploratory analysis
-- Environments where LLVM cannot be installed
 
 ## Disabling Numba
 
@@ -149,19 +138,6 @@ if not is_numba_available():
     # Check if numba is installed
     import subprocess
     subprocess.run(["pip", "list", "|", "grep", "numba"])
-```
-
-### LLVM Installation Issues
-
-**macOS:** Ensure Xcode Command Line Tools are installed:
-```bash
-xcode-select --install
-brew install llvm
-```
-
-**Linux:** Ensure build essentials are installed:
-```bash
-sudo apt-get install build-essential llvm
 ```
 
 ### Performance Not Improving
