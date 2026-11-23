@@ -84,18 +84,6 @@ Sliceline includes optional Numba JIT compilation for **5-50x performance improv
 - Up to 17% memory reduction on large datasets
 - Automatic fallback to pure NumPy if Numba not available
 
-**System Requirements:**
-
-Numba requires LLVM to be installed:
-
-.. code:: sh
-
-   # macOS
-   brew install llvm
-
-   # Linux (Ubuntu/Debian)
-   sudo apt-get install llvm
-
 **Disabling Numba:**
 
 If you need to disable Numba JIT (e.g., in restricted environments), set the environment variable:
