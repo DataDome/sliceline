@@ -14,6 +14,11 @@ jobs:
       matrix:
         python-version: ["3.10", "3.11", "3.12"]
         numba: [true, false]
+        include:
+          - numba: true
+            extras: --all-extras
+          - numba: false
+            extras: --extra dev
     name: Python ${{ matrix.python-version }} (Numba=${{ matrix.numba }})
     steps:
       - uses: actions/checkout@v6
@@ -22,9 +27,9 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install dependencies
-        run: make init
+        run: make init EXTRAS="${{ matrix.extras }}"
       - name: Verify Numba availability
         run: |
-          uv run python -c "from sliceline import is_numba_available; print(f'Numba available: {is_numba_available()}')"
+          uv run python -c "from sliceline import is_numba_available; print(f'Numba available: {is_numba_available()}'); assert str(is_numba_available()).lower() == '${{ matrix.numba }}'"
       - name: Run test
         run: make test

@@ -1,7 +1,9 @@
+EXTRAS ?= --all-extras
+
 init:
 	python3 -m pip install --upgrade pip
 	pip3 install uv
-	uv sync --all-extras
+	uv sync $(EXTRAS)
 
 lint:
 	uv run ruff check . --fix
